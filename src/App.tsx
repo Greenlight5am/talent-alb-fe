@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, createContext, useContext } from "react";
+import React, { useMemo, useState, createContext, useContext } from "react";
 
 /**
  * Signup UI con toast successo/errore e redirect automatico alla piattaforma.
