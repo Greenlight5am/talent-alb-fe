@@ -1,4 +1,4 @@
-import React, { useMemo, useState, createContext, useContext } from "react";
+import React, { useState, createContext, useContext } from "react";
 
 const PLATFORM_URL = "/app/me";
 const REDIRECT_DELAY_MS = 1000;
