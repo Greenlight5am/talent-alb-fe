@@ -7,10 +7,11 @@ import CompanyDashboard from "@/app/features/company/pages/Dashboard";
 import CompanyProfileEdit from "@/app/features/company/pages/CompanyProfileEdit";
 import TalentSearch from "@/app/features/search/pages/TalentSearch";
 import AppLanding from "@/app/features/home/AppLanding";
+import JobBoardPage from "@/features/job-board/JobBoardPage";
 import { ProtectedRoute, RoleSwitch } from "@/shared/components/Guard";
 
 export const router = createBrowserRouter([
-  { path: "/", element: <Navigate to="/app" replace /> },
+  { path: "/", element: <JobBoardPage /> },
   { path: "/auth/signup", element: <Signup /> },
   {
     path: "/app",
