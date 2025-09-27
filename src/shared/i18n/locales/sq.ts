@@ -50,6 +50,7 @@ export const sq = {
 
   },
   landing: {
+    eyebrow: "Paraqitje e platformës",
     welcomeTitle: "Mirë se erdhe në TalentALB",
     welcomeDescription:
       "Hyr në pamjen paraprake të platformës edhe pa llogari: eksploro funksionalitetet, kërko talentë dhe zbulo si të menaxhosh aplikimet. Kur të jesh gati mund të krijosh llogarinë kur të duash.",
@@ -87,6 +88,11 @@ export const sq = {
         search: "Kërko talentë",
         settings: "Cilësimet",
       },
+    },
+    sections: {
+      candidate: "Zona e kandidatit",
+      company: "Zona e kompanisë",
+      common: "Platforma",
     },
     session: {
       guest: "Po shfleton si vizitor",

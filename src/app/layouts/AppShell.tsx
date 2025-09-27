@@ -28,63 +28,101 @@ export default function AppShell() {
     ...(!isGuest ? [{ to: "/app/settings", label: t("appShell.menu.common.settings") }] : []),
   ];
 
+  const sections: Array<{ title: string; items: NavItem[] }> = [];
+  if (roles.has("CANDIDATE")) {
+    sections.push({ title: t("appShell.sections.candidate"), items: candidateMenu });
+  }
+  if (roles.has("EMPLOYER") || roles.has("ADMIN")) {
+    sections.push({ title: t("appShell.sections.company"), items: companyMenu });
+  }
+  sections.push({ title: t("appShell.sections.common"), items: commonMenu });
+
   return (
-    <div className="min-h-screen grid grid-cols-[240px_1fr]">
-      <aside className="border-r bg-white p-4">
-        <div className="mb-6 space-y-1">
-          <div className="font-bold">{t("common.appName")}</div>
-          <div className="text-xs text-gray-500 break-all">{acc?.email ?? t("appShell.session.guest")}</div>
-        </div>
-        <LanguageSwitcher className="mb-6" />
-        <nav className="space-y-1">
-          {roles.has("CANDIDATE") && candidateMenu.map((m) => <Item key={m.to} {...m} />)}
-          {roles.has("EMPLOYER")  && companyMenu.map((m) => <Item key={m.to} {...m} />)}
-          <div className="pt-2 mt-2 space-y-1 border-t">
-            {commonMenu.map((m) => (
-              <Item key={m.to} {...m} />
-            ))}
+    <div className="min-h-screen bg-gradient-to-b from-stone-50 via-white to-stone-100 text-slate-900">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6 lg:flex-row lg:py-12">
+        <aside className="lg:w-72">
+          <div className="rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-xl shadow-slate-900/5 backdrop-blur supports-[backdrop-filter]:bg-white/60 lg:sticky lg:top-10 lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto">
+            <div className="space-y-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">
+                {t("common.appName")}
+              </span>
+              <p className="break-all text-base font-semibold text-slate-900">
+                {acc?.email ?? t("appShell.session.guest")}
+              </p>
+            </div>
+            <LanguageSwitcher
+              className="mt-6 w-full"
+              selectClassName="rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+            />
+            <nav className="mt-6 space-y-6 text-sm">
+              {sections.map((section) => (
+                <NavSection key={section.title} title={section.title} items={section.items} />
+              ))}
+            </nav>
+            {!isGuest && (
+              <button
+                onClick={() => {
+                  clearSessionAccount();
+                  window.location.href = "/app";
+                }}
+                className="mt-6 w-full rounded-2xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition-transform duration-150 hover:-translate-y-0.5 hover:bg-slate-50 hover:text-slate-900"
+              >
+                {t("common.actions.logout")}
+              </button>
+            )}
           </div>
-          {!isGuest && (
-            <button
-              onClick={() => {
-                clearSessionAccount();
-                window.location.href = "/app";
-              }}
-              className="mt-4 w-full rounded-xl px-3 py-2 text-left text-sm hover:bg-gray-50"
-            >
-              {t("common.actions.logout")}
-            </button>
-          )}
-        </nav>
-      </aside>
-      <main className="p-6">
-        {isGuest && (
-          <div className="mb-6 flex justify-end">
-            <button
-              onClick={() => {
-                window.location.href = "/auth/signup";
-              }}
-              className="rounded-2xl bg-black px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-black/90"
-            >
-              {t("common.actions.registerNow")}
-            </button>
+        </aside>
+        <main className="flex-1">
+          <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-xl shadow-slate-900/5 backdrop-blur supports-[backdrop-filter]:bg-white/70 sm:p-8">
+            {isGuest && (
+              <div className="mb-6 flex flex-wrap justify-end gap-3">
+                <button
+                  onClick={() => {
+                    window.location.href = "/auth/signup";
+                  }}
+                  className="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-sm transition-transform duration-150 hover:-translate-y-0.5 hover:bg-slate-800"
+                >
+                  {t("common.actions.registerNow")}
+                </button>
+              </div>
+            )}
+            <Outlet />
           </div>
-        )}
-        <Outlet />
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
 
-function Item({ to, label }: { to: string; label: string }) {
+type NavItem = { to: string; label: string };
+
+function Item({ to, label }: NavItem) {
   return (
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `block rounded-xl px-3 py-2 text-sm ${isActive ? "bg-black text-white" : "hover:bg-gray-50"}`
+        `block transform rounded-2xl px-3 py-2 text-sm font-medium transition-all duration-150 ${
+          isActive
+            ? "bg-slate-900 text-white shadow-sm"
+            : "text-slate-600 hover:-translate-y-0.5 hover:bg-slate-50 hover:text-slate-900"
+        }`
       }
     >
       {label}
     </NavLink>
+  );
+}
+
+function NavSection({ title, items }: { title: string; items: NavItem[] }) {
+  if (items.length === 0) return null;
+  return (
+    <div>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-400">{title}</p>
+      <div className="mt-3 space-y-1.5">
+        {items.map((item) => (
+          <Item key={item.to} {...item} />
+        ))}
+      </div>
+    </div>
   );
 }

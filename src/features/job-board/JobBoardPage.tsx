@@ -9,6 +9,7 @@ import {
   type TextareaHTMLAttributes,
 } from "react";
 import { Link } from "react-router-dom";
+import { LanguageSwitcher } from "@/shared/i18n/LanguageSwitcher";
 import { useI18n, useTranslations, type TranslateFn } from "@/shared/i18n/I18nProvider";
 import { localeConfig } from "@/shared/i18n/localeConfig";
 
@@ -210,24 +211,31 @@ export default function JobBoardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-50 via-white to-stone-100 text-slate-900">
       <header className="sticky top-0 z-30 border-b border-slate-100 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-4 py-4">
           <Link to="/" className="text-base font-semibold tracking-tight text-slate-900">
             {t("common.appName")}
           </Link>
-          <nav className="flex items-center gap-2 text-sm text-slate-600">
-            <a href="#jobs" className={`${ghostButtonClasses} px-3 py-2`}>
-              {t("jobBoard.nav.offers")}
-            </a>
-            <a href="#candidature" className={`${ghostButtonClasses} px-3 py-2`}>
-              {t("jobBoard.nav.applications")}
-            </a>
-            <Link to="/auth/signup" className={`${secondaryButtonClasses} px-3 py-2`}>
-              {t("common.actions.createProfile")}
-            </Link>
-            <Link to="/app" className={`${primaryButtonClasses} px-3 py-2`}>
-              {t("common.actions.signIn")}
-            </Link>
-          </nav>
+          <div className="flex flex-1 flex-wrap items-center justify-end gap-3 sm:flex-none">
+            <nav className="order-1 flex flex-wrap items-center justify-end gap-2 text-sm text-slate-600 sm:order-none">
+              <a href="#jobs" className={`${ghostButtonClasses} px-3 py-2`}>
+                {t("jobBoard.nav.offers")}
+              </a>
+              <a href="#candidature" className={`${ghostButtonClasses} px-3 py-2`}>
+                {t("jobBoard.nav.applications")}
+              </a>
+              <Link to="/auth/signup" className={`${secondaryButtonClasses} px-3 py-2`}>
+                {t("common.actions.createProfile")}
+              </Link>
+              <Link to="/app" className={`${primaryButtonClasses} px-3 py-2`}>
+                {t("common.actions.signIn")}
+              </Link>
+            </nav>
+            <LanguageSwitcher
+              hideLabel
+              className="order-2 w-full sm:order-none sm:w-auto"
+              selectClassName="mt-0 w-full rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-600 shadow-sm focus:border-slate-400 focus:ring-2 focus:ring-slate-200 sm:w-36"
+            />
+          </div>
         </div>
       </header>
 
