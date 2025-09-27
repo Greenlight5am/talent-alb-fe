@@ -228,25 +228,25 @@ export default function JobBoardPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 pb-16">
-        <section className="py-12 text-center sm:py-16">
+      <main className="mx-auto max-w-6xl px-6 pb-20">
+        <section className="py-12 text-center sm:py-20">
           <p className="text-xs font-medium uppercase tracking-[0.28em] text-slate-500">
             Job board TalentALB
           </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h1 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
             Tutte le opportunità, subito disponibili
           </h1>
-          <p className="mt-4 mx-auto max-w-2xl text-sm text-slate-600">
+          <p className="mt-4 mx-auto max-w-2xl text-base leading-relaxed text-slate-600">
             Sfoglia le posizioni aperte senza effettuare l&apos;accesso: ogni offerta è consultabile e candidabile in
             pochi passaggi. Quando troverai il ruolo giusto, potrai inviare la tua candidatura direttamente da qui.
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm">
-            <a href="#jobs" className={`${primaryButtonClasses} px-5 py-2 font-semibold`}>
+          <div className="mt-6 flex flex-wrap justify-center gap-3 text-base">
+            <a href="#jobs" className={`${primaryButtonClasses} px-4 py-2 font-semibold`}>
               Esplora le offerte
             </a>
             <Link
               to="/auth/signup"
-              className={`${secondaryButtonClasses} px-5 py-2`}
+              className={`${secondaryButtonClasses} px-4 py-2`}
             >
               Scopri TalentALB
             </Link>
@@ -270,7 +270,7 @@ export default function JobBoardPage() {
           </div>
         )}
 
-        <section id="jobs" className="grid gap-8 lg:grid-cols-[7fr_3fr]">
+        <section id="jobs" className="grid gap-10 lg:grid-cols-[7fr_3fr]">
           <div className="space-y-6">
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <form onSubmit={handleSubmitFilters} className="grid gap-4 sm:grid-cols-3 sm:items-end">
@@ -307,21 +307,21 @@ export default function JobBoardPage() {
                 <div className="flex flex-col gap-2 sm:col-span-3 sm:flex-row sm:items-center">
                   <button
                     type="submit"
-                    className={`${primaryButtonClasses} flex-1 px-4 py-2 font-semibold`}
+                    className={`${primaryButtonClasses} flex-1 px-4 py-2.5 font-semibold text-base`}
                   >
                     Cerca offerte
                   </button>
                   <button
                     type="button"
                     onClick={handleResetFilters}
-                    className={`${secondaryButtonClasses} px-4 py-2`}
+                    className={`${secondaryButtonClasses} px-4 py-2.5 text-base`}
                   >
                     Azzera filtri
                   </button>
                 </div>
               </form>
               {hasActiveFilters && (
-                <p className="mt-4 text-xs uppercase tracking-wide text-slate-500">
+                <p className="mt-4 text-sm uppercase tracking-wide text-slate-500">
                   Filtri attivi: {filtersSummary || "nessuno"}
                 </p>
               )}
@@ -367,14 +367,14 @@ export default function JobBoardPage() {
               )}
 
               {!loading && !error && jobs.length > 0 && (
-                <div className="space-y-4">
-                  <div className="flex flex-col gap-1 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-5">
+                  <div className="flex flex-col gap-1 text-base text-slate-600 sm:flex-row sm:items-center sm:justify-between">
                     <span>
                       Mostrando {jobs.length} di {totalElements} offerte
                     </span>
                     <span>Pagina {page + 1} di {Math.max(totalPages, 1)}</span>
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {jobs.map((job) => (
                       <JobCard key={job.id} job={job} onApply={handleApply} />
                     ))}
@@ -412,23 +412,23 @@ function JobCard({ job, onApply }: JobCardProps) {
   const expiresLabel = job.expiresAt ? `Scade ${formatRelativeTime(job.expiresAt)}` : null;
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-slate-300 hover:shadow-md">
+    <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-300 hover:shadow-md">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
           <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
             {job.status ? beautifyEnum(job.status) : "Pubblicazione"}
           </div>
-          <h2 className="text-lg font-semibold text-slate-900">{job.title}</h2>
-          {location && <p className="text-sm text-slate-600">{location}</p>}
+          <h2 className="text-xl font-semibold text-slate-900">{job.title}</h2>
+          {location && <p className="text-base text-slate-600">{location}</p>}
         </div>
-        <div className="text-sm text-slate-500 sm:text-right">
+        <div className="text-base text-slate-500 sm:text-right">
           {publishedLabel && <p>{publishedLabel}</p>}
           {expiresLabel && <p className="text-xs text-slate-400">{expiresLabel}</p>}
         </div>
       </div>
 
       {badges.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
+        <div className="mt-4 flex flex-wrap gap-2 text-sm text-slate-600">
           {badges.map((badge) => (
             <Badge key={badge as string}>{beautifyEnum(badge as string)}</Badge>
           ))}
@@ -436,7 +436,7 @@ function JobCard({ job, onApply }: JobCardProps) {
       )}
 
       {job.description && (
-        <p className="mt-4 text-sm leading-relaxed text-slate-600">
+        <p className="mt-4 text-base leading-relaxed text-slate-600">
           {truncate(job.description, 260)}
         </p>
       )}
@@ -444,7 +444,7 @@ function JobCard({ job, onApply }: JobCardProps) {
       {requirements.length > 0 && (
         <div className="mt-4 border-t border-slate-100 pt-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Requisiti principali</p>
-          <ul className="mt-2 space-y-1 text-sm text-slate-600">
+          <ul className="mt-2 space-y-2 text-base text-slate-600">
             {requirements.map((req, index) => (
               <li key={index} className="flex items-start gap-2">
                 <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-slate-400" />
@@ -455,7 +455,7 @@ function JobCard({ job, onApply }: JobCardProps) {
         </div>
       )}
 
-      <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-4 text-sm sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-4 text-base sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="font-medium text-slate-900">{salary}</p>
           {job.expiresAt && <p className="text-xs text-slate-500">{expiresLabel}</p>}
@@ -464,11 +464,11 @@ function JobCard({ job, onApply }: JobCardProps) {
           <button
             type="button"
             onClick={() => onApply(job)}
-            className={`${primaryButtonClasses} px-4 py-2 font-semibold`}
+            className={`${primaryButtonClasses} px-4 py-2.5 font-semibold text-base`}
           >
             Candidati ora
           </button>
-          <a href="#candidature" className={`${secondaryButtonClasses} px-4 py-2`}>
+          <a href="#candidature" className={`${secondaryButtonClasses} px-4 py-2.5 text-base`}>
             Salva per dopo
           </a>
         </div>
@@ -485,17 +485,17 @@ function ApplicationsPanel({ applications }: ApplicationsPanelProps) {
   return (
     <aside
       id="candidature"
-      className="space-y-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-28"
+      className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:sticky lg:top-28"
     >
       <div className="space-y-2">
-        <h2 className="text-lg font-semibold text-slate-900">Le tue candidature</h2>
-        <p className="text-sm text-slate-600">
+        <h2 className="text-xl font-semibold text-slate-900">Le tue candidature</h2>
+        <p className="text-base text-slate-600">
           Salviamo in locale le posizioni che scegli di candidare così puoi ritrovarle rapidamente.
         </p>
       </div>
 
       {applications.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+        <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-base text-slate-600">
           Nessuna candidatura inviata al momento. Seleziona <span className="font-medium text-slate-900">"Candidati ora"</span>
           su una posizione per creare la tua prima candidatura.
         </div>
@@ -503,11 +503,11 @@ function ApplicationsPanel({ applications }: ApplicationsPanelProps) {
         <ul className="space-y-3">
           {applications.map((app) => (
             <li key={app.id} className="rounded-xl border border-slate-200 p-4">
-              <div className="text-sm font-semibold text-slate-900">{app.jobTitle}</div>
-              <div className="mt-1 text-xs uppercase tracking-wide text-slate-500">
+              <div className="text-base font-semibold text-slate-900">{app.jobTitle}</div>
+              <div className="mt-1 text-sm uppercase tracking-wide text-slate-500">
                 Inviata il {formatDate(app.createdAt)}
               </div>
-              <div className="mt-3 space-y-1 text-sm text-slate-600">
+              <div className="mt-3 space-y-1 text-base text-slate-600">
                 <p>
                   <span className="font-medium text-slate-900">{app.candidateName}</span>
                   {app.email && <span className="text-slate-500"> · {app.email}</span>}
