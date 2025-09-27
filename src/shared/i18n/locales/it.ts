@@ -48,6 +48,7 @@ export const it = {
 
   },
   landing: {
+    eyebrow: "Anteprima piattaforma",
     welcomeTitle: "Benvenuto in TalentALB",
     welcomeDescription:
       "Accedi all'anteprima della piattaforma anche senza un account: esplora le funzionalità, consulta la ricerca talenti e scopri come gestire le candidature. Quando sarai pronto potrai creare l'account in qualsiasi momento.",
@@ -85,6 +86,11 @@ export const it = {
         search: "Cerca talenti",
         settings: "Impostazioni",
       },
+    },
+    sections: {
+      candidate: "Area candidato",
+      company: "Area azienda",
+      common: "Area piattaforma",
     },
     session: {
       guest: "Accesso come ospite",
