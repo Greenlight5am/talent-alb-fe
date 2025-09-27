@@ -7,6 +7,129 @@ import React, { useMemo, useState, createContext, useContext } from "react";
 const PLATFORM_URL = "/app";           // <— set your real path/URL here
 const REDIRECT_DELAY_MS = 1200;        // delay to show the toast
 
+type Language = "it" | "en";
+
+const translations = {
+  it: {
+    authBadge: "Auth · Registrazione",
+    createAccountTitle: "Crea il tuo account",
+    demoSubtitle: "Demo UI per i tuoi endpoint Spring Boot. Nessuna dipendenza extra.",
+    tabCandidate: "Candidato",
+    tabCompany: "Azienda",
+    candidateSubmit: "Registrati come candidato",
+    companySubmit: "Registrati come azienda",
+    emailLabel: "Email",
+    emailPlaceholder: "name@example.com",
+    passwordLabel: "Password",
+    passwordHideButton: "Nascondi",
+    passwordShowButton: "Mostra",
+    passwordHideAria: "Nascondi password",
+    passwordShowAria: "Mostra password",
+    processing: "Elaborazione…",
+    candidateFirstNameLabel: "Nome",
+    candidateFirstNamePlaceholder: "Mario",
+    candidateLastNameLabel: "Cognome",
+    candidateLastNamePlaceholder: "Rossi",
+    candidateCityLabel: "Città (opzionale)",
+    candidateCityPlaceholder: "Bergamo",
+    companyEmailPlaceholder: "owner@azienda.it",
+    companyNameLabel: "Nome azienda",
+    companyNamePlaceholder: "Talent ALB S.r.l.",
+    companyWebsiteLabel: "Sito web (opzionale)",
+    companyWebsitePlaceholder: "https://example.com",
+    companyCityLabel: "Città (opzionale)",
+    companyCityPlaceholder: "Bergamo",
+    resultAccountCreated: "Account creato",
+    toastCandidateSuccessTitle: "Registrazione completata",
+    toastCompanySuccessTitle: "Azienda registrata",
+    toastRedirectMessage: "Accesso in corso…",
+    toastFailureTitle: "Registrazione fallita",
+    footerTipOnePrefix:
+      "Suggerimenti: valida i campi anche lato backend (Bean Validation), restituisci 400 con dettagli strutturati; esponi Swagger UI su",
+    footerTipOneSuffix: ".",
+    footerSwaggerPath: "/swagger-ui",
+    footerTipTwo:
+      "In produzione usa HTTPS. Password: hash lato server (BCrypt/Argon2), mai in chiaro nei log.",
+    languageLabel: "Lingua",
+    languageSwitcherLabel: "Seleziona la lingua dell'interfaccia",
+    languageName_it: "Italiano",
+    languageName_en: "Inglese",
+  },
+  en: {
+    authBadge: "Auth · Sign up",
+    createAccountTitle: "Create your account",
+    demoSubtitle: "Demo UI for your Spring Boot endpoints. No extra dependencies.",
+    tabCandidate: "Candidate",
+    tabCompany: "Company",
+    candidateSubmit: "Sign up as candidate",
+    companySubmit: "Sign up as company",
+    emailLabel: "Email",
+    emailPlaceholder: "name@example.com",
+    passwordLabel: "Password",
+    passwordHideButton: "Hide",
+    passwordShowButton: "Show",
+    passwordHideAria: "Hide password",
+    passwordShowAria: "Show password",
+    processing: "Processing…",
+    candidateFirstNameLabel: "First name",
+    candidateFirstNamePlaceholder: "Mario",
+    candidateLastNameLabel: "Last name",
+    candidateLastNamePlaceholder: "Rossi",
+    candidateCityLabel: "City (optional)",
+    candidateCityPlaceholder: "Bergamo",
+    companyEmailPlaceholder: "owner@company.com",
+    companyNameLabel: "Company name",
+    companyNamePlaceholder: "Talent ALB Ltd.",
+    companyWebsiteLabel: "Website (optional)",
+    companyWebsitePlaceholder: "https://example.com",
+    companyCityLabel: "City (optional)",
+    companyCityPlaceholder: "Bergamo",
+    resultAccountCreated: "Account created",
+    toastCandidateSuccessTitle: "Sign-up completed",
+    toastCompanySuccessTitle: "Company registered",
+    toastRedirectMessage: "Signing you in…",
+    toastFailureTitle: "Sign-up failed",
+    footerTipOnePrefix:
+      "Tips: validate fields on the backend too (Bean Validation), return 400 with structured details; expose Swagger UI at",
+    footerTipOneSuffix: ".",
+    footerSwaggerPath: "/swagger-ui",
+    footerTipTwo:
+      "Use HTTPS in production. Passwords: hash them server-side (BCrypt/Argon2), never log them in plain text.",
+    languageLabel: "Language",
+    languageSwitcherLabel: "Select the interface language",
+    languageName_it: "Italian",
+    languageName_en: "English",
+  },
+} as const;
+
+type Translations = typeof translations;
+type TranslationKey = keyof Translations[Language];
+
+const I18nCtx = createContext<{
+  lang: Language;
+  setLang: (lang: Language) => void;
+  t: (key: TranslationKey) => string;
+} | null>(null);
+
+function useI18n() {
+  const ctx = useContext(I18nCtx);
+  if (!ctx) throw new Error("useI18n must be used within <I18nProvider>");
+  return ctx;
+}
+
+function I18nProvider({ children }: { children: React.ReactNode }) {
+  const [lang, setLang] = useState<Language>("it");
+  const value = useMemo(
+    () => ({
+      lang,
+      setLang,
+      t: (key: TranslationKey) => translations[lang][key],
+    }),
+    [lang]
+  );
+  return <I18nCtx.Provider value={value}>{children}</I18nCtx.Provider>;
+}
+
 // ------------ Tipi ------------
 
 type UserRole = "CANDIDATE" | "EMPLOYER" | "ADMIN" | string;
@@ -157,7 +280,7 @@ function Field({
 }
 
 function PasswordField({
-  label = "Password",
+  label,
   name = "password",
   value,
   onChange,
@@ -169,10 +292,12 @@ function PasswordField({
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
 }) {
+  const { t } = useI18n();
+  const resolvedLabel = label ?? t("passwordLabel");
   const [show, setShow] = useState(false);
   return (
     <div>
-      <Label htmlFor={name}>{label}</Label>
+      <Label htmlFor={name}>{resolvedLabel}</Label>
       <div className="relative">
         <Input
           id={name}
@@ -188,9 +313,9 @@ function PasswordField({
           type="button"
           onClick={() => setShow((s) => !s)}
           className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl border px-2 py-1 text-xs text-gray-700 hover:bg-gray-50"
-          aria-label={show ? "Nascondi password" : "Mostra password"}
+          aria-label={show ? t("passwordHideAria") : t("passwordShowAria")}
         >
-          {show ? "Hide" : "Show"}
+          {show ? t("passwordHideButton") : t("passwordShowButton")}
         </button>
       </div>
     </div>
@@ -204,6 +329,7 @@ function SubmitButton({
   loading: boolean;
   children: React.ReactNode;
 }) {
+  const { t } = useI18n();
   return (
     <button
       className={cx(
@@ -215,7 +341,7 @@ function SubmitButton({
       {loading ? (
         <span className="inline-flex items-center gap-2">
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-          Processing…
+          {t("processing")}
         </span>
       ) : (
         children
@@ -225,10 +351,13 @@ function SubmitButton({
 }
 
 function ResultCard({ data }: { data: AccountDto }) {
+  const { t } = useI18n();
   const pretty = useMemo(() => JSON.stringify(data, null, 2), [data]);
   return (
     <div className="rounded-2xl border border-gray-200 bg-gray-50 p-3 text-xs text-gray-800 mt-3">
-      <div className="text-[11px] uppercase tracking-wide mb-1 text-gray-500">Account creato</div>
+      <div className="text-[11px] uppercase tracking-wide mb-1 text-gray-500">
+        {t("resultAccountCreated")}
+      </div>
       <pre className="overflow-auto">{pretty}</pre>
     </div>
   );
@@ -246,6 +375,7 @@ function ErrorCard({ error }: { error: string }) {
 
 function CandidateForm() {
   const { push } = useToast();
+  const { t } = useI18n();
   const [form, setForm] = useState<CandidateSignupReq>({
     email: "",
     password: "",
@@ -281,8 +411,8 @@ function CandidateForm() {
       setResult(data);
       push({
         kind: "success",
-        title: "Registrazione completata",
-        message: "Accesso in corso…",
+        title: t("toastCandidateSuccessTitle"),
+        message: t("toastRedirectMessage"),
       });
       // Redirect verso la piattaforma reale (cookie-based o SSO):
       setTimeout(() => {
@@ -293,7 +423,7 @@ function CandidateForm() {
       setError(msg);
       push({
         kind: "error",
-        title: "Registrazione fallita",
+        title: t("toastFailureTitle"),
         message: msg,
       });
     } finally {
@@ -305,13 +435,13 @@ function CandidateForm() {
     <form onSubmit={onSubmit} className="space-y-3">
       <div className="grid grid-cols-1 gap-3">
         <Field
-          label="Email"
+          label={t("emailLabel")}
           name="email"
           value={form.email}
           onChange={(e) => update("email", e.target.value)}
           type="email"
           required
-          placeholder="name@example.com"
+          placeholder={t("emailPlaceholder")}
         />
         <PasswordField
           value={form.password}
@@ -320,32 +450,32 @@ function CandidateForm() {
         />
         <div className="grid grid-cols-2 gap-3">
           <Field
-            label="First name"
+            label={t("candidateFirstNameLabel")}
             name="firstName"
             value={form.firstName}
             onChange={(e) => update("firstName", e.target.value)}
             required
-            placeholder="Mario"
+            placeholder={t("candidateFirstNamePlaceholder")}
           />
           <Field
-            label="Last name"
+            label={t("candidateLastNameLabel")}
             name="lastName"
             value={form.lastName}
             onChange={(e) => update("lastName", e.target.value)}
             required
-            placeholder="Rossi"
+            placeholder={t("candidateLastNamePlaceholder")}
           />
         </div>
         <Field
-          label="City (opzionale)"
+          label={t("candidateCityLabel")}
           name="city"
           value={form.city || ""}
           onChange={(e) => update("city", e.target.value)}
-          placeholder="Bergamo"
+          placeholder={t("candidateCityPlaceholder")}
         />
       </div>
 
-      <SubmitButton loading={loading}>Sign up as Candidate</SubmitButton>
+      <SubmitButton loading={loading}>{t("candidateSubmit")}</SubmitButton>
 
       {error && <ErrorCard error={error} />}
       {result && <ResultCard data={result} />}
@@ -355,6 +485,7 @@ function CandidateForm() {
 
 function CompanyForm() {
   const { push } = useToast();
+  const { t } = useI18n();
   const [form, setForm] = useState<CompanySignupReq>({
     email: "",
     password: "",
@@ -390,8 +521,8 @@ function CompanyForm() {
       setResult(data);
       push({
         kind: "success",
-        title: "Azienda registrata",
-        message: "Accesso in corso…",
+        title: t("toastCompanySuccessTitle"),
+        message: t("toastRedirectMessage"),
       });
       setTimeout(() => {
         window.location.assign(PLATFORM_URL);
@@ -401,7 +532,7 @@ function CompanyForm() {
       setError(msg);
       push({
         kind: "error",
-        title: "Registrazione fallita",
+        title: t("toastFailureTitle"),
         message: msg,
       });
     } finally {
@@ -413,13 +544,13 @@ function CompanyForm() {
     <form onSubmit={onSubmit} className="space-y-3">
       <div className="grid grid-cols-1 gap-3">
         <Field
-          label="Email"
+          label={t("emailLabel")}
           name="email"
           value={form.email}
           onChange={(e) => update("email", e.target.value)}
           type="email"
           required
-          placeholder="owner@azienda.it"
+          placeholder={t("companyEmailPlaceholder")}
         />
         <PasswordField
           value={form.password}
@@ -427,33 +558,33 @@ function CompanyForm() {
           required
         />
         <Field
-          label="Company name"
+          label={t("companyNameLabel")}
           name="companyName"
           value={form.companyName}
           onChange={(e) => update("companyName", e.target.value)}
           required
-          placeholder="Talent ALB S.r.l."
+          placeholder={t("companyNamePlaceholder")}
         />
         <div className="grid grid-cols-2 gap-3">
           <Field
-            label="Website (opzionale)"
+            label={t("companyWebsiteLabel")}
             name="website"
             value={form.website || ""}
             onChange={(e) => update("website", e.target.value)}
             type="url"
-            placeholder="https://example.com"
+            placeholder={t("companyWebsitePlaceholder")}
           />
           <Field
-            label="City (opzionale)"
+            label={t("companyCityLabel")}
             name="city"
             value={form.city || ""}
             onChange={(e) => update("city", e.target.value)}
-            placeholder="Bergamo"
+            placeholder={t("companyCityPlaceholder")}
           />
         </div>
       </div>
 
-      <SubmitButton loading={loading}>Sign up as Company</SubmitButton>
+      <SubmitButton loading={loading}>{t("companySubmit")}</SubmitButton>
 
       {error && <ErrorCard error={error} />}
       {result && <ResultCard data={result} />}
@@ -463,58 +594,109 @@ function CompanyForm() {
 
 // ------------ App ------------
 
-export default function App() {
+const languageOptions: Array<{ code: Language; labelKey: TranslationKey }> = [
+  { code: "it", labelKey: "languageName_it" },
+  { code: "en", labelKey: "languageName_en" },
+];
+
+function LanguageSwitcher() {
+  const { lang, setLang, t } = useI18n();
+  return (
+    <div className="flex flex-col items-end gap-2 text-xs text-gray-600">
+      <span className="font-medium">{t("languageLabel")}</span>
+      <div
+        role="group"
+        aria-label={t("languageSwitcherLabel")}
+        className="inline-flex rounded-2xl border border-gray-200 bg-white p-1 shadow-sm"
+      >
+        {languageOptions.map((option) => {
+          const isActive = option.code === lang;
+          return (
+            <button
+              key={option.code}
+              type="button"
+              onClick={() => setLang(option.code)}
+              className={cx(
+                "min-w-[90px] rounded-xl px-3 py-1 text-xs transition",
+                isActive
+                  ? "bg-black text-white shadow"
+                  : "text-gray-700 hover:bg-gray-50"
+              )}
+              aria-pressed={isActive}
+            >
+              {t(option.labelKey)}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function AppContent() {
+  const { t } = useI18n();
   const [tab, setTab] = useState<"candidate" | "company">("candidate");
 
   return (
-    <ToastProvider>
-      <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 text-gray-900">
-        <div className="max-w-md mx-auto p-6">
-          <header className="mb-8">
-            <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs text-gray-600">
-              <span className="inline-block h-2 w-2 rounded-full bg-black" />
-              Auth · Sign up
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 text-gray-900">
+      <div className="max-w-md mx-auto p-6">
+        <header className="mb-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs text-gray-600">
+                <span className="inline-block h-2 w-2 rounded-full bg-black" />
+                {t("authBadge")}
+              </div>
+              <h1 className="mt-3 text-3xl font-bold tracking-tight">{t("createAccountTitle")}</h1>
+              <p className="text-sm text-gray-600">{t("demoSubtitle")}</p>
             </div>
-            <h1 className="mt-3 text-3xl font-bold tracking-tight">Crea il tuo account</h1>
-            <p className="text-sm text-gray-600">
-              Demo UI per i tuoi endpoint Spring Boot. Nessuna dipendenza extra.
-            </p>
-          </header>
-
-          <div className="mb-4 flex rounded-2xl border border-gray-200 bg-white p-1 shadow-sm">
-            <button
-              onClick={() => setTab("candidate")}
-              className={cx(
-                "flex-1 rounded-xl px-4 py-2 text-sm transition",
-                tab === "candidate" ? "bg-black text-white shadow" : "hover:bg-gray-50"
-              )}
-            >
-              Candidate
-            </button>
-            <button
-              onClick={() => setTab("company")}
-              className={cx(
-                "flex-1 rounded-xl px-4 py-2 text-sm transition",
-                tab === "company" ? "bg-black text-white shadow" : "hover:bg-gray-50"
-              )}
-            >
-              Company
-            </button>
+            <LanguageSwitcher />
           </div>
+        </header>
 
-          <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-            {tab === "candidate" ? <CandidateForm /> : <CompanyForm />}
-          </div>
-
-          <footer className="text-xs text-gray-500 mt-6 space-y-1">
-            <p>
-              Suggerimenti: valida i campi anche lato backend (Bean Validation),
-              restituisci 400 con dettagli strutturati; esponi Swagger UI su <code>/swagger-ui</code>.
-            </p>
-            <p>In produzione usa HTTPS. Password: hash lato server (BCrypt/Argon2), mai in chiaro nei log.</p>
-          </footer>
+        <div className="mb-4 flex rounded-2xl border border-gray-200 bg-white p-1 shadow-sm">
+          <button
+            onClick={() => setTab("candidate")}
+            className={cx(
+              "flex-1 rounded-xl px-4 py-2 text-sm transition",
+              tab === "candidate" ? "bg-black text-white shadow" : "hover:bg-gray-50"
+            )}
+          >
+            {t("tabCandidate")}
+          </button>
+          <button
+            onClick={() => setTab("company")}
+            className={cx(
+              "flex-1 rounded-xl px-4 py-2 text-sm transition",
+              tab === "company" ? "bg-black text-white shadow" : "hover:bg-gray-50"
+            )}
+          >
+            {t("tabCompany")}
+          </button>
         </div>
+
+        <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+          {tab === "candidate" ? <CandidateForm /> : <CompanyForm />}
+        </div>
+
+        <footer className="text-xs text-gray-500 mt-6 space-y-1">
+          <p>
+            {t("footerTipOnePrefix")} <code>{t("footerSwaggerPath")}</code>
+            {t("footerTipOneSuffix")}
+          </p>
+          <p>{t("footerTipTwo")}</p>
+        </footer>
       </div>
-    </ToastProvider>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <I18nProvider>
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
+    </I18nProvider>
   );
 }
