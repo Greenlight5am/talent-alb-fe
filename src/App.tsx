@@ -1,4 +1,4 @@
-import React, { useMemo, useState, createContext, useContext } from "react";
+import React, { useMemo, useState, createContext, useContext, useEffect } from "react";
 
 /**
  * Signup UI with success/error toast and automatic redirect to the platform.
@@ -8,6 +8,23 @@ const PLATFORM_URL = "/app";           // <— set your real path/URL here
 const REDIRECT_DELAY_MS = 1200;        // delay to show the toast
 
 type Language = "it" | "en";
+
+const LANGUAGE_STORAGE_KEY = "talent-alb:lang";
+
+function resolveInitialLanguage(): Language {
+  if (typeof window === "undefined") {
+    return "it";
+  }
+  const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+  if (stored === "it" || stored === "en") {
+    return stored;
+  }
+  const browserLanguage = window.navigator?.language?.toLowerCase();
+  if (browserLanguage?.startsWith("en")) {
+    return "en";
+  }
+  return "it";
+}
 
 const translations = {
   it: {
@@ -116,14 +133,21 @@ function useI18n() {
 }
 
 function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Language>("it");
+  const [lang, setLang] = useState<Language>(() => resolveInitialLanguage());
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
+    }
+  }, [lang]);
+
   const value = useMemo(
     () => ({
       lang,
       setLang,
       t: (key: TranslationKey) => translations[lang][key],
     }),
-    [lang]
+    [lang, setLang]
   );
   return <I18nCtx.Provider value={value}>{children}</I18nCtx.Provider>;
 }
@@ -594,21 +618,22 @@ function CompanyForm() {
 
 function LanguageSwitcher() {
   const { lang, setLang, t } = useI18n();
+  const selectId = "language-switcher";
   return (
-    <div className="flex flex-col items-end gap-1 text-xs text-gray-600">
-      <label htmlFor="language-select" className="font-medium">
+    <label htmlFor={selectId} className="flex flex-col text-sm text-gray-700">
+      <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">
         {t("languageLabel")}
-      </label>
+      </span>
       <select
-        id="language-select"
+        id={selectId}
         value={lang}
-        onChange={(e) => setLang(e.target.value as Language)}
-        className="rounded-xl border border-gray-200 bg-white px-3 py-1 text-xs text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-black/80"
+        onChange={(event) => setLang(event.target.value as Language)}
+        className="mt-1 rounded-full border border-gray-300 bg-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-black/70"
       >
         <option value="it">{t("languageName_it")}</option>
         <option value="en">{t("languageName_en")}</option>
       </select>
-    </div>
+    </label>
   );
 }
 
