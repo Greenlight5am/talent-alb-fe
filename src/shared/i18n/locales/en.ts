@@ -1,0 +1,284 @@
+import type { TranslationSchema } from "./it";
+
+export const en = {
+  common: {
+    appName: "TalentALB",
+    actions: {
+      createAccount: "Create an account",
+      explore: "Start exploring",
+      registerNow: "Register now",
+      registerToContinue: "Register to continue",
+      createProfile: "Create profile",
+      signIn: "Sign in",
+      retry: "Retry",
+      searchJobs: "Search jobs",
+      resetFilters: "Reset filters",
+      saveDraft: "Save draft",
+      applyNow: "Apply now",
+      saveForLater: "Save for later",
+      cancel: "Cancel",
+      submitApplication: "Submit application",
+      receiveUpdates: "Get updates",
+      clearFilters: "Clear filters",
+      logout: "Log out",
+    },
+    status: {
+      publication: "Publication",
+    },
+    placeholders: {
+      searchKeyword: "e.g. product manager, developer, marketing",
+      searchCountry: "e.g. Albania",
+      searchCity: "e.g. Tirana",
+      candidateName: "Your full name",
+      candidateEmail: "name@domain.com",
+      candidatePhone: "(+355) 123 456 789",
+      candidateResume: "https://",
+      candidateMessage: "Tell us about yourself, your motivation and your key achievements.",
+    },
+    info: {
+      none: "none",
+    },
+  },
+  landing: {
+    welcomeTitle: "Welcome to TalentALB",
+    welcomeDescription:
+      "Access the preview of the platform even without an account: explore features, browse the talent search and discover how to manage applications. When you're ready you can create your account at any time.",
+    candidates: {
+      title: "For candidates",
+      description: "Complete your profile, upload your CV and attachments and manage applications with ease.",
+      demoCta: "View the demo profile",
+    },
+    companies: {
+      title: "For companies",
+      description: "Build and manage your company profile, invite recruiters and publish job offers.",
+      demoCta: "Discover the company area",
+    },
+    guest: {
+      title: "Apply only when you want",
+      description:
+        "You're browsing as a guest. When you want to apply to a position or save your preferences we'll ask you to register. Until then you can move freely across the platform.",
+    },
+  },
+  appShell: {
+    menu: {
+      candidate: {
+        dashboard: "Dashboard",
+        profile: "My profile",
+        attachments: "CV & Attachments",
+        skills: "Skills",
+      },
+      company: {
+        dashboard: "Dashboard",
+        profile: "Company profile",
+        users: "Users",
+        jobs: "Job offers",
+      },
+      common: {
+        search: "Search talents",
+        settings: "Settings",
+      },
+    },
+    session: {
+      guest: "Browsing as guest",
+    },
+  },
+  candidateDashboard: {
+    greeting: "Hi, {email}",
+    intro: "Welcome to your candidate area.",
+    cards: {
+      profile: {
+        title: "Profile completion",
+        description: "Add headline, about, city and skills.",
+        cta: "Complete profile",
+      },
+      attachments: {
+        title: "CV & Attachments",
+        description: "Upload your CV and other documents.",
+        cta: "Go to section",
+      },
+    },
+  },
+  companyDashboard: {
+    greeting: "Welcome, {email}",
+    intro: "Company area: quick overview.",
+    cards: {
+      profile: {
+        title: "Company profile",
+        description: "Complete description, website and logo.",
+        cta: "Edit profile",
+      },
+      team: {
+        title: "Team",
+        description: "Manage company users (Owner/Admin/Recruiter).",
+        cta: "Manage users",
+      },
+    },
+  },
+  candidateProfile: {
+    title: "Edit candidate profile",
+    saveSuccess: "Draft saved (localStorage).",
+    draftNotice: "⚠️ Local mock only. We'll connect real candidate APIs once available.",
+    form: {
+      firstName: "First name",
+      lastName: "Last name",
+      headline: "Headline",
+      phone: "Phone",
+      city: "City",
+      region: "Region",
+      country: "Country",
+      about: "About",
+      visibility: "Visibility",
+      visibilityPublic: "PUBLIC",
+      visibilityPrivate: "PRIVATE",
+    },
+  },
+  companyProfile: {
+    title: "Company profile",
+    saveSuccess: "Draft saved (localStorage).",
+    draftNotice: "⚠️ Local mock. We'll connect the `/api/company/me` endpoint when ready.",
+    form: {
+      name: "Name",
+      legalName: "Legal name",
+      website: "Website",
+      size: "Size",
+      industry: "Industry",
+      city: "City",
+      region: "Region",
+      country: "Country",
+      description: "Description",
+      logoUrl: "Logo URL",
+      status: "Status",
+    },
+  },
+  talentSearch: {
+    title: "Search talents",
+    description: "When APIs are enabled we'll use your repositories for visibility/name/city.",
+    placeholder: "Search by name/surname/city…",
+    demoLabel: "Static demo.",
+  },
+  auth: {
+    signup: {
+      badge: "Auth · Sign up",
+      title: "Create your account",
+      description: "Platform draft: no security, mock session on localStorage.",
+      tabs: {
+        candidate: "Candidate",
+        company: "Company",
+      },
+      processing: "Processing…",
+      fields: {
+        email: "Email",
+        password: "Password",
+        firstName: "First name",
+        lastName: "Last name",
+        city: "City",
+        companyName: "Company name",
+        website: "Website",
+      },
+      candidateSuccessTitle: "Registration completed",
+      candidateSuccessBody: "Welcome! Redirecting you…",
+      companySuccessTitle: "Company registered",
+      companySuccessBody: "Taking you to the platform…",
+      errorTitle: "Error",
+      cityOptional: "City (opt)",
+      websiteOptional: "Website (opt)",
+      submitCandidate: "Sign up as Candidate",
+      submitCompany: "Sign up as Company",
+      passwordLabel: "Password",
+      passwordShow: "Show",
+      passwordHide: "Hide",
+    },
+  },
+  router: {
+    comingSoon: {
+      candidateAttachments: "CV & Attachments (coming soon)",
+      candidateSkills: "Skills (coming soon)",
+      companyUsers: "Company users (coming soon)",
+      companyJobs: "Job postings (coming soon)",
+      accountSettings: "Account settings (coming soon)",
+    },
+  },
+  jobBoard: {
+    nav: {
+      offers: "Jobs",
+      applications: "Applications",
+      createProfile: "Create profile",
+      signIn: "Sign in",
+    },
+    hero: {
+      eyebrow: "TalentALB job board",
+      title: "All opportunities, available right away",
+      description:
+        "Browse open positions without signing in: every offer can be viewed and applied to in just a few steps. When you find the right role you can submit your application directly from here.",
+      primaryCta: "Explore jobs",
+      secondaryCta: "Discover TalentALB",
+      positionsCount: "{count} jobs currently published",
+    },
+    filters: {
+      keywordLabel: "Keyword",
+      countryLabel: "Country",
+      cityLabel: "City",
+      active: "Active filters: {summary}",
+      summaryKeyword: "keyword: \"{value}\"",
+      summaryCity: "city: \"{value}\"",
+      summaryCountry: "country: \"{value}\"",
+    },
+    feedback: {
+      loadError: "Unable to load job offers",
+      applicationSuccess: "Application sent for \"{title}\"",
+    },
+    list: {
+      showing: "Showing {current} of {total} jobs",
+      page: "Page {page} of {total}",
+    },
+    errors: {
+      generic: "Something went wrong",
+      applicationRequired: "Name and email are required",
+    },
+    jobCard: {
+      salaryHidden: "Salary confidential",
+      requirementsTitle: "Key requirements",
+      publishedAt: "Published {relativeTime}",
+      expiresAt: "Closing {relativeTime}",
+      salary: {
+        between: "{min} - {max}",
+        from: "from {value}",
+        to: "up to {value}",
+        unspecified: "Salary not specified",
+      },
+      locationFallback: "Location not specified",
+      employerFallback: "TalentALB network company",
+    },
+    applications: {
+      title: "Your applications",
+      description: "We store locally the roles you apply for so you can find them quickly.",
+      empty: "No applications yet. Select \"{cta}\" to keep them here.",
+      submittedAt: "Submitted on {date}",
+      phoneLabel: "Phone",
+      resumeLabel: "Resume",
+    },
+    dialog: {
+      title: "Quick application",
+      close: "Close",
+      subtitleFallback: "TalentALB network company",
+      submit: "Submit application",
+      fields: {
+        name: "Full name",
+        email: "Email",
+        phone: "Phone",
+        resume: "Resume link (optional)",
+        message: "Cover letter",
+      },
+    },
+    pagination: {
+      label: "Page {page} of {total}",
+      previous: "Previous",
+      next: "Next",
+    },
+    emptyState: {
+      title: "No jobs found",
+      description:
+        "Change the search filters or come back later: the job board is frequently updated with new positions.",
+    },
+  },
+} satisfies TranslationSchema;
