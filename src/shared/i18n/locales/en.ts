@@ -38,6 +38,7 @@ export const en = {
     info: {
       none: "none",
     },
+
     language: {
       label: "Language",
       options: {

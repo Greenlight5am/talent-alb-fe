@@ -1,7 +1,9 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { getSessionAccount, clearSessionAccount } from "@/app/features/auth/useSession";
 import { useTranslations } from "@/shared/i18n/I18nProvider";
+
 import { LanguageSwitcher } from "@/shared/i18n/LanguageSwitcher";
+
 
 export default function AppShell() {
   const acc = getSessionAccount();

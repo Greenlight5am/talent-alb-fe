@@ -38,6 +38,7 @@ export const sq = {
     info: {
       none: "asnjë",
     },
+
     language: {
       label: "Gjuha",
       options: {
@@ -46,6 +47,7 @@ export const sq = {
         sq: "Shqip",
       },
     },
+
   },
   landing: {
     welcomeTitle: "Mirë se erdhe në TalentALB",

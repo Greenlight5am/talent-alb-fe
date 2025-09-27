@@ -36,6 +36,7 @@ export const it = {
     info: {
       none: "nessuno",
     },
+
     language: {
       label: "Lingua",
       options: {
@@ -44,6 +45,7 @@ export const it = {
         sq: "Albanese",
       },
     },
+
   },
   landing: {
     welcomeTitle: "Benvenuto in TalentALB",
