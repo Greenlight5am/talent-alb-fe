@@ -618,6 +618,7 @@ function CompanyForm() {
 
 function LanguageSwitcher() {
   const { lang, setLang, t } = useI18n();
+
   const selectId = "language-switcher";
   return (
     <label htmlFor={selectId} className="flex flex-col text-sm text-gray-700">
@@ -634,6 +635,36 @@ function LanguageSwitcher() {
         <option value="en">{t("languageName_en")}</option>
       </select>
     </label>
+
+  const options: Array<{ value: Language; label: string }> = [
+    { value: "it", label: t("languageName_it") },
+    { value: "en", label: t("languageName_en") },
+  ];
+  return (
+    <fieldset className="flex flex-col items-end gap-2 text-xs text-gray-600" aria-label={t("languageLabel")}>
+      <legend className="font-medium uppercase tracking-wide text-[11px]">
+        {t("languageLabel")}
+      </legend>
+      <div className="inline-flex rounded-full border border-gray-200 bg-white p-1 shadow-sm">
+        {options.map((option) => (
+          <button
+            key={option.value}
+            type="button"
+            onClick={() => setLang(option.value)}
+            className={cx(
+              "rounded-full px-3 py-1 text-xs transition",
+              lang === option.value
+                ? "bg-black text-white shadow"
+                : "text-gray-600 hover:bg-gray-50"
+            )}
+            aria-pressed={lang === option.value}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </fieldset>
+
   );
 }
 
