@@ -73,6 +73,15 @@ const PAGE_SIZE = 6;
 const DEFAULT_FILTERS: FiltersState = { q: "", city: "", country: "" };
 const APPLICATIONS_STORAGE_KEY = "talentalb:applications";
 
+const baseButtonClasses =
+  "inline-flex items-center justify-center rounded-full text-sm font-medium transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500";
+const primaryButtonClasses =
+  `${baseButtonClasses} bg-slate-800 text-white shadow-sm hover:-translate-y-0.5 hover:bg-slate-700`;
+const secondaryButtonClasses =
+  `${baseButtonClasses} border border-slate-200 bg-white text-slate-700 shadow-sm hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-50`;
+const ghostButtonClasses =
+  `${baseButtonClasses} text-slate-600 hover:text-slate-900 hover:bg-slate-100`;
+
 export default function JobBoardPage() {
   const [formState, setFormState] = useState<FiltersState>(DEFAULT_FILTERS);
   const [activeFilters, setActiveFilters] = useState<FiltersState>(DEFAULT_FILTERS);
@@ -190,28 +199,28 @@ export default function JobBoardPage() {
   }, [activeFilters]);
 
   return (
-    <div className="min-h-screen bg-stone-50 text-slate-900">
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-stone-50 via-white to-stone-100 text-slate-900">
+      <header className="sticky top-0 z-30 border-b border-slate-100 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
           <Link to="/" className="text-base font-semibold tracking-tight text-slate-900">
             TalentALB
           </Link>
           <nav className="flex items-center gap-2 text-sm text-slate-600">
-            <a href="#jobs" className="rounded-full px-3 py-2 transition hover:bg-slate-100">
+            <a href="#jobs" className={`${ghostButtonClasses} px-3 py-2`}>
               Offerte
             </a>
-            <a href="#candidature" className="rounded-full px-3 py-2 transition hover:bg-slate-100">
+            <a href="#candidature" className={`${ghostButtonClasses} px-3 py-2`}>
               Candidature
             </a>
             <Link
               to="/auth/signup"
-              className="rounded-full px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
+              className={`${secondaryButtonClasses} px-3 py-2`}
             >
               Crea profilo
             </Link>
             <Link
               to="/app"
-              className="inline-flex items-center rounded-full bg-slate-900 px-3 py-2 font-medium text-white transition hover:bg-slate-800"
+              className={`${primaryButtonClasses} px-3 py-2`}
             >
               Accedi
             </Link>
@@ -232,15 +241,12 @@ export default function JobBoardPage() {
             pochi passaggi. Quando troverai il ruolo giusto, potrai inviare la tua candidatura direttamente da qui.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm">
-            <a
-              href="#jobs"
-              className="inline-flex items-center rounded-full bg-slate-900 px-5 py-2 font-medium text-white transition hover:bg-slate-800"
-            >
+            <a href="#jobs" className={`${primaryButtonClasses} px-5 py-2 font-semibold`}>
               Esplora le offerte
             </a>
             <Link
               to="/auth/signup"
-              className="inline-flex items-center rounded-full border border-slate-200 px-5 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
+              className={`${secondaryButtonClasses} px-5 py-2`}
             >
               Scopri TalentALB
             </Link>
@@ -266,7 +272,7 @@ export default function JobBoardPage() {
 
         <section id="jobs" className="grid gap-8 lg:grid-cols-[7fr_3fr]">
           <div className="space-y-6">
-            <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <form onSubmit={handleSubmitFilters} className="grid gap-4 sm:grid-cols-3 sm:items-end">
                 <div className="sm:col-span-2">
                   <Label htmlFor="search">Parola chiave</Label>
@@ -301,14 +307,14 @@ export default function JobBoardPage() {
                 <div className="flex flex-col gap-2 sm:col-span-3 sm:flex-row sm:items-center">
                   <button
                     type="submit"
-                    className="inline-flex flex-1 items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+                    className={`${primaryButtonClasses} flex-1 px-4 py-2 font-semibold`}
                   >
                     Cerca offerte
                   </button>
                   <button
                     type="button"
                     onClick={handleResetFilters}
-                    className="inline-flex items-center justify-center rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+                    className={`${secondaryButtonClasses} px-4 py-2`}
                   >
                     Azzera filtri
                   </button>
@@ -406,7 +412,7 @@ function JobCard({ job, onApply }: JobCardProps) {
   const expiresLabel = job.expiresAt ? `Scade ${formatRelativeTime(job.expiresAt)}` : null;
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-slate-300 hover:shadow-sm">
+    <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-slate-300 hover:shadow-md">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
           <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -458,14 +464,11 @@ function JobCard({ job, onApply }: JobCardProps) {
           <button
             type="button"
             onClick={() => onApply(job)}
-            className="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+            className={`${primaryButtonClasses} px-4 py-2 font-semibold`}
           >
             Candidati ora
           </button>
-          <a
-            href="#candidature"
-            className="inline-flex items-center rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
-          >
+          <a href="#candidature" className={`${secondaryButtonClasses} px-4 py-2`}>
             Salva per dopo
           </a>
         </div>
@@ -482,7 +485,7 @@ function ApplicationsPanel({ applications }: ApplicationsPanelProps) {
   return (
     <aside
       id="candidature"
-      className="space-y-5 rounded-2xl border border-slate-200 bg-white p-5 lg:sticky lg:top-28"
+      className="space-y-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-28"
     >
       <div className="space-y-2">
         <h2 className="text-lg font-semibold text-slate-900">Le tue candidature</h2>
@@ -576,14 +579,14 @@ function ApplicationDialog({ job, onClose, onSubmit }: ApplicationDialogProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/55 px-4 py-10"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 py-10 backdrop-blur-sm"
       onClick={handleOverlayClick}
     >
       <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-lg">
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-5 top-5 rounded-full border border-slate-200 p-2 text-slate-500 transition hover:bg-slate-100"
+          className={`${secondaryButtonClasses} absolute right-5 top-5 h-9 w-9 rounded-full p-0 text-base`}
           aria-label="Chiudi"
         >
           ✕
@@ -654,13 +657,13 @@ function ApplicationDialog({ job, onClose, onSubmit }: ApplicationDialogProps) {
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex items-center justify-center rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+              className={`${ghostButtonClasses} px-4 py-2`}
             >
               Annulla
             </button>
             <button
               type="submit"
-              className="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
+              className={`${primaryButtonClasses} px-4 py-2 font-semibold`}
             >
               Invia candidatura
             </button>
@@ -692,7 +695,7 @@ function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
           type="button"
           onClick={() => canPrev && onPageChange(page - 1)}
           disabled={!canPrev}
-          className="inline-flex items-center rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+          className={`${secondaryButtonClasses} px-4 py-2 disabled:cursor-not-allowed disabled:opacity-60`}
         >
           Precedente
         </button>
@@ -700,7 +703,7 @@ function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
           type="button"
           onClick={() => canNext && onPageChange(page + 1)}
           disabled={!canNext}
-          className="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+          className={`${primaryButtonClasses} px-4 py-2 disabled:cursor-not-allowed disabled:opacity-60`}
         >
           Successiva
         </button>
@@ -715,24 +718,21 @@ type EmptyStateProps = {
 
 function EmptyState({ onClearFilters }: EmptyStateProps) {
   return (
-    <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-10 text-center text-slate-600">
+    <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-10 text-center text-slate-600 shadow-sm">
       <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-xl">🔍</div>
       <h3 className="mt-5 text-lg font-semibold text-slate-900">Nessuna offerta trovata</h3>
       <p className="mt-2 text-sm">
         Modifica i filtri di ricerca oppure torna più tardi: il job board viene aggiornato di frequente con nuove posizioni.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
-        <a
-          className="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
-          href="#"
-        >
+        <a className={`${primaryButtonClasses} px-4 py-2 font-semibold`} href="#">
           Ricevi aggiornamenti
         </a>
         {onClearFilters && (
           <button
             type="button"
             onClick={onClearFilters}
-            className="inline-flex items-center rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+            className={`${secondaryButtonClasses} px-4 py-2`}
           >
             Rimuovi filtri
           </button>
