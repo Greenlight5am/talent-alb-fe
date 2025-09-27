@@ -2,6 +2,9 @@ import { NavLink, Outlet } from "react-router-dom";
 import { getSessionAccount, clearSessionAccount } from "@/app/features/auth/useSession";
 import { useTranslations } from "@/shared/i18n/I18nProvider";
 
+import { LanguageSwitcher } from "@/shared/i18n/LanguageSwitcher";
+
+
 export default function AppShell() {
   const acc = getSessionAccount();
   const roles = new Set(acc?.roles ?? []);
@@ -32,6 +35,7 @@ export default function AppShell() {
           <div className="font-bold">{t("common.appName")}</div>
           <div className="text-xs text-gray-500 break-all">{acc?.email ?? t("appShell.session.guest")}</div>
         </div>
+        <LanguageSwitcher className="mb-6" />
         <nav className="space-y-1">
           {roles.has("CANDIDATE") && candidateMenu.map((m) => <Item key={m.to} {...m} />)}
           {roles.has("EMPLOYER")  && companyMenu.map((m) => <Item key={m.to} {...m} />)}

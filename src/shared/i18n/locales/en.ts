@@ -38,6 +38,15 @@ export const en = {
     info: {
       none: "none",
     },
+
+    language: {
+      label: "Language",
+      options: {
+        it: "Italian",
+        en: "English",
+        sq: "Albanian",
+      },
+    },
   },
   landing: {
     welcomeTitle: "Welcome to TalentALB",

@@ -36,6 +36,16 @@ export const it = {
     info: {
       none: "nessuno",
     },
+
+    language: {
+      label: "Lingua",
+      options: {
+        it: "Italiano",
+        en: "Inglese",
+        sq: "Albanese",
+      },
+    },
+
   },
   landing: {
     welcomeTitle: "Benvenuto in TalentALB",
