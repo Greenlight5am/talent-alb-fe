@@ -1,4 +1,5 @@
 import React, { useState, createContext, useContext } from "react";
+import { useTranslations } from "@/shared/i18n/I18nProvider";
 
 const PLATFORM_URL = "/app/me";
 const REDIRECT_DELAY_MS = 1000;
@@ -8,7 +9,7 @@ type UserRole = "CANDIDATE" | "EMPLOYER" | "ADMIN" | string;
 type AccountDto = {
   id: string;
   email: string;
-  roles?: UserRole[]; // Set<UserRole> mappato a array
+  roles?: UserRole[];
   [k: string]: unknown;
 };
 
@@ -71,7 +72,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               />
               <div className="grow">
                 {t.title && <div className="text-sm font-medium">{t.title}</div>}
-                <div className="text-sm text-gray-700 whitespace-pre-wrap">{t.message}</div>
+                <div className="whitespace-pre-wrap text-sm text-gray-700">{t.message}</div>
               </div>
             </div>
           </div>
@@ -83,20 +84,26 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
 /* ---------------- UI primitives ---------------- */
 function Label({ children, htmlFor }: { children: React.ReactNode; htmlFor?: string }) {
-  return <label htmlFor={htmlFor} className="block text-sm font-medium mb-1 text-gray-800">{children}</label>;
+  return (
+    <label htmlFor={htmlFor} className="mb-1 block text-sm font-medium text-gray-800">
+      {children}
+    </label>
+  );
 }
+
 function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
       className={cx(
         "w-full rounded-2xl border border-gray-200 bg-white p-3 shadow-sm",
-        "placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-black/80 focus:border-black",
+        "placeholder:text-gray-400 focus:border-black focus:outline-none focus:ring-2 focus:ring-black/80",
         props.className || ""
       )}
     />
   );
 }
+
 function Field({ label, name, ...rest }: { label: string; name: string } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div>
@@ -105,119 +112,271 @@ function Field({ label, name, ...rest }: { label: string; name: string } & React
     </div>
   );
 }
-function PasswordField({ value, onChange, required }: { value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; required?: boolean; }) {
+
+type PasswordFieldProps = {
+  label: string;
+  showLabel: string;
+  hideLabel: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+};
+
+function PasswordField({ label, showLabel, hideLabel, value, onChange, required }: PasswordFieldProps) {
   const [show, setShow] = useState(false);
   return (
     <div>
-      <Label htmlFor="password">Password</Label>
+      <Label htmlFor="password">{label}</Label>
       <div className="relative">
-        <Input id="password" name="password" type={show ? "text" : "password"} value={value} onChange={onChange} required={required} className="pr-12" />
-        <button type="button" onClick={() => setShow((s) => !s)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl border px-2 py-1 text-xs text-gray-700 hover:bg-gray-50">
-          {show ? "Hide" : "Show"}
+        <Input
+          id="password"
+          name="password"
+          type={show ? "text" : "password"}
+          value={value}
+          onChange={onChange}
+          required={required}
+          className="pr-12"
+        />
+        <button
+          type="button"
+          onClick={() => setShow((s) => !s)}
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl border px-2 py-1 text-xs text-gray-700 hover:bg-gray-50"
+        >
+          {show ? hideLabel : showLabel}
         </button>
       </div>
     </div>
   );
 }
+
 function SubmitButton({ loading, children }: { loading: boolean; children: React.ReactNode }) {
+  const t = useTranslations();
   return (
-    <button className={cx("w-full rounded-2xl p-3 mt-2 bg-black text-white shadow transition","disabled:opacity-60 disabled:cursor-not-allowed hover:bg-black/90")} disabled={loading}>
-      {loading ? <span className="inline-flex items-center gap-2"><span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" /> Processing…</span> : children}
+    <button
+      className={cx(
+        "mt-2 w-full rounded-2xl bg-black p-3 text-white shadow transition",
+        "disabled:cursor-not-allowed disabled:opacity-60 hover:bg-black/90"
+      )}
+      disabled={loading}
+    >
+      {loading ? (
+        <span className="inline-flex items-center gap-2">
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          {t("auth.signup.processing")}
+        </span>
+      ) : (
+        children
+      )}
     </button>
   );
 }
 
 /* ---------------- Forms ---------------- */
-type CandidateSignupReq = { email: string; password: string; firstName: string; lastName: string; city?: string; };
-type CompanySignupReq   = { email: string; password: string; companyName: string; website?: string; city?: string; };
+type CandidateSignupReq = { email: string; password: string; firstName: string; lastName: string; city?: string };
+type CompanySignupReq = { email: string; password: string; companyName: string; website?: string; city?: string };
 
 function CandidateForm() {
   const { push } = useToast();
+  const t = useTranslations();
   const [form, setForm] = useState<CandidateSignupReq>({ email: "", password: "", firstName: "", lastName: "", city: "" });
   const [loading, setLoading] = useState(false);
-  function update<K extends keyof CandidateSignupReq>(key: K, v: string) { setForm((f) => ({ ...f, [key]: v })); }
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
+
+  function update<K extends keyof CandidateSignupReq>(key: K, value: string) {
+    setForm((previous) => ({ ...previous, [key]: value }));
+  }
+
+  async function onSubmit(event: React.FormEvent) {
+    event.preventDefault();
     setLoading(true);
     try {
-      const payload = { ...form, email: form.email.trim(), firstName: form.firstName.trim(), lastName: form.lastName.trim(), city: form.city?.trim() || undefined };
-      const acc = await postJson<typeof payload, AccountDto>("/api/auth/signup/candidate", payload);
-      // mock-session
-      localStorage.setItem("account", JSON.stringify(acc));
-      push({ kind: "success", title: "Registrazione completata", message: "Benvenuto! Ti reindirizzo…" });
-      setTimeout(() => (window.location.href = PLATFORM_URL), REDIRECT_DELAY_MS);
+      const payload = {
+        ...form,
+        email: form.email.trim(),
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+        city: form.city?.trim() || undefined,
+      };
+      const account = await postJson<typeof payload, AccountDto>("/api/auth/signup/candidate", payload);
+      localStorage.setItem("account", JSON.stringify(account));
+      push({
+        kind: "success",
+        title: t("auth.signup.candidateSuccessTitle"),
+        message: t("auth.signup.candidateSuccessBody"),
+      });
+      setTimeout(() => {
+        window.location.href = PLATFORM_URL;
+      }, REDIRECT_DELAY_MS);
     } catch (err: any) {
-      push({ kind: "error", title: "Errore", message: err?.message ?? String(err) });
+      push({ kind: "error", title: t("auth.signup.errorTitle"), message: err?.message ?? String(err) });
     } finally {
       setLoading(false);
     }
   }
+
   return (
     <form onSubmit={onSubmit} className="space-y-3">
-      <Field label="Email" name="email" value={form.email} onChange={(e) => update("email", e.target.value)} type="email" required />
-      <PasswordField value={form.password} onChange={(e) => update("password", e.target.value)} required />
+      <Field
+        label={t("auth.signup.fields.email")}
+        name="email"
+        value={form.email}
+        onChange={(event) => update("email", event.target.value)}
+        type="email"
+        required
+      />
+      <PasswordField
+        label={t("auth.signup.fields.password")}
+        showLabel={t("auth.signup.passwordShow")}
+        hideLabel={t("auth.signup.passwordHide")}
+        value={form.password}
+        onChange={(event) => update("password", event.target.value)}
+        required
+      />
       <div className="grid grid-cols-2 gap-3">
-        <Field label="First name" name="firstName" value={form.firstName} onChange={(e) => update("firstName", e.target.value)} required />
-        <Field label="Last name"  name="lastName"  value={form.lastName}  onChange={(e) => update("lastName", e.target.value)}  required />
+        <Field
+          label={t("auth.signup.fields.firstName")}
+          name="firstName"
+          value={form.firstName}
+          onChange={(event) => update("firstName", event.target.value)}
+          required
+        />
+        <Field
+          label={t("auth.signup.fields.lastName")}
+          name="lastName"
+          value={form.lastName}
+          onChange={(event) => update("lastName", event.target.value)}
+          required
+        />
       </div>
-      <Field label="City (opz.)" name="city" value={form.city || ""} onChange={(e) => update("city", e.target.value)} />
-      <SubmitButton loading={loading}>Sign up as Candidate</SubmitButton>
+      <Field
+        label={t("auth.signup.cityOptional")}
+        name="city"
+        value={form.city || ""}
+        onChange={(event) => update("city", event.target.value)}
+      />
+      <SubmitButton loading={loading}>{t("auth.signup.submitCandidate")}</SubmitButton>
     </form>
   );
 }
 
 function CompanyForm() {
   const { push } = useToast();
+  const t = useTranslations();
   const [form, setForm] = useState<CompanySignupReq>({ email: "", password: "", companyName: "", website: "", city: "" });
   const [loading, setLoading] = useState(false);
-  function update<K extends keyof CompanySignupReq>(key: K, v: string) { setForm((f) => ({ ...f, [key]: v })); }
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
+
+  function update<K extends keyof CompanySignupReq>(key: K, value: string) {
+    setForm((previous) => ({ ...previous, [key]: value }));
+  }
+
+  async function onSubmit(event: React.FormEvent) {
+    event.preventDefault();
     setLoading(true);
     try {
-      const payload = { ...form, email: form.email.trim(), companyName: form.companyName.trim(), website: form.website?.trim() || undefined, city: form.city?.trim() || undefined };
-      const acc = await postJson<typeof payload, AccountDto>("/api/auth/signup/company", payload);
-      localStorage.setItem("account", JSON.stringify(acc));
-      push({ kind: "success", title: "Azienda registrata", message: "Ti porto alla piattaforma…" });
-      setTimeout(() => (window.location.href = PLATFORM_URL), REDIRECT_DELAY_MS);
+      const payload = {
+        ...form,
+        email: form.email.trim(),
+        companyName: form.companyName.trim(),
+        website: form.website?.trim() || undefined,
+        city: form.city?.trim() || undefined,
+      };
+      const account = await postJson<typeof payload, AccountDto>("/api/auth/signup/company", payload);
+      localStorage.setItem("account", JSON.stringify(account));
+      push({
+        kind: "success",
+        title: t("auth.signup.companySuccessTitle"),
+        message: t("auth.signup.companySuccessBody"),
+      });
+      setTimeout(() => {
+        window.location.href = PLATFORM_URL;
+      }, REDIRECT_DELAY_MS);
     } catch (err: any) {
-      push({ kind: "error", title: "Errore", message: err?.message ?? String(err) });
+      push({ kind: "error", title: t("auth.signup.errorTitle"), message: err?.message ?? String(err) });
     } finally {
       setLoading(false);
     }
   }
+
   return (
     <form onSubmit={onSubmit} className="space-y-3">
-      <Field label="Email" name="email" value={form.email} onChange={(e) => update("email", e.target.value)} type="email" required />
-      <PasswordField value={form.password} onChange={(e) => update("password", e.target.value)} required />
-      <Field label="Company name" name="companyName" value={form.companyName} onChange={(e) => update("companyName", e.target.value)} required />
+      <Field
+        label={t("auth.signup.fields.email")}
+        name="email"
+        value={form.email}
+        onChange={(event) => update("email", event.target.value)}
+        type="email"
+        required
+      />
+      <PasswordField
+        label={t("auth.signup.fields.password")}
+        showLabel={t("auth.signup.passwordShow")}
+        hideLabel={t("auth.signup.passwordHide")}
+        value={form.password}
+        onChange={(event) => update("password", event.target.value)}
+        required
+      />
+      <Field
+        label={t("auth.signup.fields.companyName")}
+        name="companyName"
+        value={form.companyName}
+        onChange={(event) => update("companyName", event.target.value)}
+        required
+      />
       <div className="grid grid-cols-2 gap-3">
-        <Field label="Website (opz.)" name="website" value={form.website || ""} onChange={(e) => update("website", e.target.value)} placeholder="https://…" />
-        <Field label="City (opz.)"    name="city"    value={form.city || ""}    onChange={(e) => update("city", e.target.value)} />
+        <Field
+          label={t("auth.signup.fields.website")}
+          name="website"
+          value={form.website || ""}
+          onChange={(event) => update("website", event.target.value)}
+          placeholder="https://…"
+        />
+        <Field
+          label={t("auth.signup.cityOptional")}
+          name="city"
+          value={form.city || ""}
+          onChange={(event) => update("city", event.target.value)}
+        />
       </div>
-      <SubmitButton loading={loading}>Sign up as Company</SubmitButton>
+      <SubmitButton loading={loading}>{t("auth.signup.submitCompany")}</SubmitButton>
     </form>
   );
 }
 
 export default function Signup() {
+  const t = useTranslations();
   const [tab, setTab] = useState<"candidate" | "company">("candidate");
+
   return (
     <ToastProvider>
       <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 text-gray-900">
-        <div className="max-w-md mx-auto p-6">
+        <div className="mx-auto max-w-md p-6">
           <header className="mb-8">
             <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs text-gray-600">
               <span className="inline-block h-2 w-2 rounded-full bg-black" />
-              Auth · Sign up
+              {t("auth.signup.badge")}
             </div>
-            <h1 className="mt-3 text-3xl font-bold tracking-tight">Crea il tuo account</h1>
-            <p className="text-sm text-gray-600">Bozza piattaforma: nessuna sicurezza, sessione mock su localStorage.</p>
+            <h1 className="mt-3 text-3xl font-bold tracking-tight">{t("auth.signup.title")}</h1>
+            <p className="text-sm text-gray-600">{t("auth.signup.description")}</p>
           </header>
 
           <div className="mb-4 flex rounded-2xl border border-gray-200 bg-white p-1 shadow-sm">
-            <button onClick={() => setTab("candidate")} className={cx("flex-1 rounded-xl px-4 py-2 text-sm transition", tab === "candidate" ? "bg-black text-white shadow" : "hover:bg-gray-50")}>Candidate</button>
-            <button onClick={() => setTab("company")}   className={cx("flex-1 rounded-xl px-4 py-2 text-sm transition", tab === "company"   ? "bg-black text-white shadow" : "hover:bg-gray-50")}>Company</button>
+            <button
+              onClick={() => setTab("candidate")}
+              className={cx(
+                "flex-1 rounded-xl px-4 py-2 text-sm transition",
+                tab === "candidate" ? "bg-black text-white shadow" : "hover:bg-gray-50"
+              )}
+            >
+              {t("auth.signup.tabs.candidate")}
+            </button>
+            <button
+              onClick={() => setTab("company")}
+              className={cx(
+                "flex-1 rounded-xl px-4 py-2 text-sm transition",
+                tab === "company" ? "bg-black text-white shadow" : "hover:bg-gray-50"
+              )}
+            >
+              {t("auth.signup.tabs.company")}
+            </button>
           </div>
 
           <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">

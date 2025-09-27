@@ -1,0 +1,284 @@
+import type { TranslationSchema } from "./it";
+
+export const sq = {
+  common: {
+    appName: "TalentALB",
+    actions: {
+      createAccount: "Krijo një llogari",
+      explore: "Fillo eksplorimin",
+      registerNow: "Regjistrohu tani",
+      registerToContinue: "Regjistrohu për të vazhduar",
+      createProfile: "Krijo profil",
+      signIn: "Hyr",
+      retry: "Provo përsëri",
+      searchJobs: "Kërko punë",
+      resetFilters: "Rivendos filtrat",
+      saveDraft: "Ruaj draftin",
+      applyNow: "Apliko tani",
+      saveForLater: "Ruaj për më vonë",
+      cancel: "Anulo",
+      submitApplication: "Dërgo aplikimin",
+      receiveUpdates: "Merr njoftime",
+      clearFilters: "Hiq filtrat",
+      logout: "Dil",
+    },
+    status: {
+      publication: "Publikim",
+    },
+    placeholders: {
+      searchKeyword: "p.sh. product manager, zhvillues, marketing",
+      searchCountry: "p.sh. Shqipëri",
+      searchCity: "p.sh. Tiranë",
+      candidateName: "Emri dhe mbiemri",
+      candidateEmail: "emri@domeni.com",
+      candidatePhone: "(+355) 123 456 789",
+      candidateResume: "https://",
+      candidateMessage: "Tregona për veten, motivimin dhe arritjet kryesore.",
+    },
+    info: {
+      none: "asnjë",
+    },
+  },
+  landing: {
+    welcomeTitle: "Mirë se erdhe në TalentALB",
+    welcomeDescription:
+      "Hyr në pamjen paraprake të platformës edhe pa llogari: eksploro funksionalitetet, kërko talentë dhe zbulo si të menaxhosh aplikimet. Kur të jesh gati mund të krijosh llogarinë kur të duash.",
+    candidates: {
+      title: "Për kandidatët",
+      description: "Plotëso profilin, ngarko CV dhe dokumente dhe menaxho aplikimet lehtësisht.",
+      demoCta: "Shiko profilin demo",
+    },
+    companies: {
+      title: "Për kompanitë",
+      description: "Krijo dhe menaxho profilin e kompanisë, fto rekruterët dhe publiko ofertat e punës.",
+      demoCta: "Zbulo zonën e kompanisë",
+    },
+    guest: {
+      title: "Apliko vetëm kur të duash",
+      description:
+        "Po shfleton si vizitor. Kur të duash të aplikosh për një pozicion ose të ruash preferencat do të të kërkojmë të regjistrohesh. Deri atëherë mund të lëvizësh lirshëm në platformë.",
+    },
+  },
+  appShell: {
+    menu: {
+      candidate: {
+        dashboard: "Dashboard",
+        profile: "Profili im",
+        attachments: "CV & Dokumente",
+        skills: "Aftësitë",
+      },
+      company: {
+        dashboard: "Dashboard",
+        profile: "Profili i kompanisë",
+        users: "Përdoruesit",
+        jobs: "Pozicionet e punës",
+      },
+      common: {
+        search: "Kërko talentë",
+        settings: "Cilësimet",
+      },
+    },
+    session: {
+      guest: "Po shfleton si vizitor",
+    },
+  },
+  candidateDashboard: {
+    greeting: "Përshëndetje, {email}",
+    intro: "Mirë se erdhe në zonën tënde të kandidatit.",
+    cards: {
+      profile: {
+        title: "Plotësimi i profilit",
+        description: "Shto headline, përshkrim, qytet dhe aftësi.",
+        cta: "Plotëso profilin",
+      },
+      attachments: {
+        title: "CV & Dokumente",
+        description: "Ngarko CV-në dhe dokumentet e tjera.",
+        cta: "Shko te seksioni",
+      },
+    },
+  },
+  companyDashboard: {
+    greeting: "Mirë se erdhe, {email}",
+    intro: "Zona e kompanisë: përmbledhje e shpejtë.",
+    cards: {
+      profile: {
+        title: "Profili i kompanisë",
+        description: "Plotëso përshkrimin, faqen dhe logon.",
+        cta: "Redakto profilin",
+      },
+      team: {
+        title: "Ekipi",
+        description: "Menaxho përdoruesit e kompanisë (Owner/Admin/Recruiter).",
+        cta: "Menaxho përdoruesit",
+      },
+    },
+  },
+  candidateProfile: {
+    title: "Redakto profilin e kandidatit",
+    saveSuccess: "Drafti u ruajt (localStorage).",
+    draftNotice: "⚠️ Vetëm mock lokal. Do të lidhim API-t reale të kandidatëve kur të jenë gati.",
+    form: {
+      firstName: "Emri",
+      lastName: "Mbiemri",
+      headline: "Headline",
+      phone: "Telefoni",
+      city: "Qyteti",
+      region: "Rajoni",
+      country: "Shteti",
+      about: "Rreth teje",
+      visibility: "Dukshmëria",
+      visibilityPublic: "PUBLIKE",
+      visibilityPrivate: "PRIVATE",
+    },
+  },
+  companyProfile: {
+    title: "Profili i kompanisë",
+    saveSuccess: "Drafti u ruajt (localStorage).",
+    draftNotice: "⚠️ Mock lokal. Do të lidhim endpoint-in `/api/company/me` kur të jetë gati.",
+    form: {
+      name: "Emri",
+      legalName: "Emri ligjor",
+      website: "Website",
+      size: "Madhësia",
+      industry: "Industria",
+      city: "Qyteti",
+      region: "Rajoni",
+      country: "Shteti",
+      description: "Përshkrimi",
+      logoUrl: "Logo URL",
+      status: "Statusi",
+    },
+  },
+  talentSearch: {
+    title: "Kërko talentë",
+    description: "Kur të aktivizohen API-t do të përdorim të dhënat e tua për dukshmëri/emër/qytet.",
+    placeholder: "Kërko sipas emrit/mbiemrit/qytetit…",
+    demoLabel: "Demo statike.",
+  },
+  auth: {
+    signup: {
+      badge: "Auth · Sign up",
+      title: "Krijo llogarinë tënde",
+      description: "Version demonstrativ: pa siguri, session mock në localStorage.",
+      tabs: {
+        candidate: "Kandidat",
+        company: "Kompani",
+      },
+      processing: "Po përpunohet…",
+      fields: {
+        email: "Email",
+        password: "Fjalëkalimi",
+        firstName: "Emri",
+        lastName: "Mbiemri",
+        city: "Qyteti",
+        companyName: "Emri i kompanisë",
+        website: "Website",
+      },
+      candidateSuccessTitle: "Regjistrimi u përfundua",
+      candidateSuccessBody: "Mirë se erdhe! Po të ridrejtojmë…",
+      companySuccessTitle: "Kompania u regjistrua",
+      companySuccessBody: "Po të çojmë në platformë…",
+      errorTitle: "Gabim",
+      cityOptional: "Qyteti (ops.)",
+      websiteOptional: "Website (ops.)",
+      submitCandidate: "Regjistrohu si kandidat",
+      submitCompany: "Regjistrohu si kompani",
+      passwordLabel: "Fjalëkalimi",
+      passwordShow: "Shfaq",
+      passwordHide: "Fshih",
+    },
+  },
+  router: {
+    comingSoon: {
+      candidateAttachments: "CV & Dokumente (së shpejti)",
+      candidateSkills: "Aftësi (së shpejti)",
+      companyUsers: "Përdoruesit e kompanisë (së shpejti)",
+      companyJobs: "Pozicionet e punës (së shpejti)",
+      accountSettings: "Cilësimet e llogarisë (së shpejti)",
+    },
+  },
+  jobBoard: {
+    nav: {
+      offers: "Pozicione",
+      applications: "Aplikimet",
+      createProfile: "Krijo profil",
+      signIn: "Hyr",
+    },
+    hero: {
+      eyebrow: "Job board TalentALB",
+      title: "Të gjitha mundësitë, gati menjëherë",
+      description:
+        "Shfleto pozicionet e hapura pa hyrë në sistem: çdo ofertë mund të shihet dhe aplikohet me pak hapa. Kur të gjesh rolin e duhur, apliko direkt nga këtu.",
+      primaryCta: "Eksploro ofertat",
+      secondaryCta: "Zbulo TalentALB",
+      positionsCount: "{count} pozicione të publikuara aktualisht",
+    },
+    filters: {
+      keywordLabel: "Fjalë kyçe",
+      countryLabel: "Shteti",
+      cityLabel: "Qyteti",
+      active: "Filtrat aktivë: {summary}",
+      summaryKeyword: "fjalë kyçe: \"{value}\"",
+      summaryCity: "qytet: \"{value}\"",
+      summaryCountry: "shtet: \"{value}\"",
+    },
+    feedback: {
+      loadError: "Nuk u ngarkuan dot ofertat",
+      applicationSuccess: "Aplikimi u dërgua për \"{title}\"",
+    },
+    list: {
+      showing: "Duke shfaqur {current} nga {total} oferta",
+      page: "Faqja {page} nga {total}",
+    },
+    errors: {
+      generic: "Diçka shkoi keq",
+      applicationRequired: "Emri dhe email-i janë të detyrueshëm",
+    },
+    jobCard: {
+      salaryHidden: "Paga konfidenciale",
+      requirementsTitle: "Kërkesat kryesore",
+      publishedAt: "Publikuar {relativeTime}",
+      expiresAt: "Përfundon {relativeTime}",
+      salary: {
+        between: "{min} - {max}",
+        from: "nga {value}",
+        to: "deri në {value}",
+        unspecified: "Paga e papërcaktuar",
+      },
+      locationFallback: "Vendndodhja nuk është specifikuar",
+      employerFallback: "Kompani e rrjetit TalentALB",
+    },
+    applications: {
+      title: "Aplikimet e tua",
+      description: "Ruajmë lokalisht pozicionet ku aplikon që t'i gjesh shpejt.",
+      empty: "Asnjë aplikim ende. Zgjidh \"{cta}\" për t'i ruajtur këtu.",
+      submittedAt: "Dërguar më {date}",
+      phoneLabel: "Telefoni",
+      resumeLabel: "CV",
+    },
+    dialog: {
+      title: "Aplikim i shpejtë",
+      close: "Mbyll",
+      subtitleFallback: "Kompani e rrjetit TalentALB",
+      submit: "Dërgo aplikimin",
+      fields: {
+        name: "Emri dhe mbiemri",
+        email: "Email",
+        phone: "Telefoni",
+        resume: "Link i CV-së (opsionale)",
+        message: "Mesazh prezantimi",
+      },
+    },
+    pagination: {
+      label: "Faqja {page} nga {total}",
+      previous: "Prapa",
+      next: "Para",
+    },
+    emptyState: {
+      title: "Nuk u gjet asnjë ofertë",
+      description:
+        "Ndrysho filtrat e kërkimit ose kthehu më vonë: job board-i përditësohet shpesh me pozicione të reja.",
+    },
+  },
+} satisfies TranslationSchema;

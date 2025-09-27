@@ -1,36 +1,36 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { getSessionAccount, clearSessionAccount } from "@/app/features/auth/useSession";
+import { useTranslations } from "@/shared/i18n/I18nProvider";
 
 export default function AppShell() {
   const acc = getSessionAccount();
   const roles = new Set(acc?.roles ?? []);
   const isGuest = !acc;
+  const t = useTranslations();
 
   const candidateMenu = [
-    { to: "/app/candidate", label: "Dashboard" },
-    { to: "/app/candidate/profile", label: "Il mio profilo" },
-    { to: "/app/candidate/attachments", label: "CV & Allegati" },
-    { to: "/app/candidate/skills", label: "Competenze" },
+    { to: "/app/candidate", label: t("appShell.menu.candidate.dashboard") },
+    { to: "/app/candidate/profile", label: t("appShell.menu.candidate.profile") },
+    { to: "/app/candidate/attachments", label: t("appShell.menu.candidate.attachments") },
+    { to: "/app/candidate/skills", label: t("appShell.menu.candidate.skills") },
   ];
   const companyMenu = [
-    { to: "/app/company", label: "Dashboard" },
-    { to: "/app/company/profile", label: "Profilo azienda" },
-    { to: "/app/company/users", label: "Utenti" },
-    { to: "/app/company/jobs", label: "Offerte di lavoro" },
+    { to: "/app/company", label: t("appShell.menu.company.dashboard") },
+    { to: "/app/company/profile", label: t("appShell.menu.company.profile") },
+    { to: "/app/company/users", label: t("appShell.menu.company.users") },
+    { to: "/app/company/jobs", label: t("appShell.menu.company.jobs") },
   ];
   const commonMenu = [
-    { to: "/app/search", label: "Cerca talenti" },
-    ...(!isGuest ? [{ to: "/app/settings", label: "Impostazioni" }] : []),
+    { to: "/app/search", label: t("appShell.menu.common.search") },
+    ...(!isGuest ? [{ to: "/app/settings", label: t("appShell.menu.common.settings") }] : []),
   ];
 
   return (
     <div className="min-h-screen grid grid-cols-[240px_1fr]">
       <aside className="border-r bg-white p-4">
         <div className="mb-6 space-y-1">
-          <div className="font-bold">TalentALB</div>
-          <div className="text-xs text-gray-500 break-all">
-            {acc?.email ?? "Accesso come ospite"}
-          </div>
+          <div className="font-bold">{t("common.appName")}</div>
+          <div className="text-xs text-gray-500 break-all">{acc?.email ?? t("appShell.session.guest")}</div>
         </div>
         <nav className="space-y-1">
           {roles.has("CANDIDATE") && candidateMenu.map((m) => <Item key={m.to} {...m} />)}
@@ -48,7 +48,7 @@ export default function AppShell() {
               }}
               className="mt-4 w-full rounded-xl px-3 py-2 text-left text-sm hover:bg-gray-50"
             >
-              Logout
+              {t("common.actions.logout")}
             </button>
           )}
         </nav>
@@ -62,7 +62,7 @@ export default function AppShell() {
               }}
               className="rounded-2xl bg-black px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-black/90"
             >
-              Iscriviti ora
+              {t("common.actions.registerNow")}
             </button>
           </div>
         )}
