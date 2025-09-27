@@ -190,108 +190,90 @@ export default function JobBoardPage() {
   }, [activeFilters]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link to="/" className="text-lg font-semibold text-slate-900">
+    <div className="min-h-screen bg-stone-50 text-slate-900">
+      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
+          <Link to="/" className="text-base font-semibold tracking-tight text-slate-900">
             TalentALB
           </Link>
-          <nav className="flex items-center gap-3 text-sm text-slate-600">
-            <a href="#jobs" className="rounded-xl px-3 py-2 transition hover:bg-slate-100">
+          <nav className="flex items-center gap-2 text-sm text-slate-600">
+            <a href="#jobs" className="rounded-full px-3 py-2 transition hover:bg-slate-100">
               Offerte
             </a>
-            <a href="#candidature" className="rounded-xl px-3 py-2 transition hover:bg-slate-100">
-              Le tue candidature
+            <a href="#candidature" className="rounded-full px-3 py-2 transition hover:bg-slate-100">
+              Candidature
             </a>
             <Link
-              to="/app"
-              className="rounded-xl border border-slate-200 px-3 py-2 font-medium text-slate-900 transition hover:bg-slate-100"
+              to="/auth/signup"
+              className="rounded-full px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
             >
-              Accedi all&apos;area riservata
+              Crea profilo
+            </Link>
+            <Link
+              to="/app"
+              className="inline-flex items-center rounded-full bg-slate-900 px-3 py-2 font-medium text-white transition hover:bg-slate-800"
+            >
+              Accedi
             </Link>
           </nav>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 pb-16">
-        <section className="py-12 sm:py-16">
-          <div className="grid gap-8 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm sm:grid-cols-[3fr_2fr] sm:p-12">
-            <div>
-              <span className="inline-flex items-center rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
-                Il marketplace del talento albanese
-              </span>
-              <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-                Scopri tutte le opportunità aperte su TalentALB
-              </h1>
-              <p className="mt-4 text-base leading-relaxed text-slate-600">
-                Consulta gli annunci pubblicati dalle aziende partner e candida il tuo profilo in pochi passaggi.
-                Nessun account è richiesto per esplorare le offerte: quando troverai il ruolo perfetto potrai
-                candidarti direttamente da qui.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3 text-sm">
-                <a
-                  href="#jobs"
-                  className="inline-flex items-center rounded-2xl bg-slate-900 px-5 py-2 font-medium text-white shadow-sm transition hover:bg-slate-900/90"
-                >
-                  Esplora le offerte
-                </a>
-                <Link
-                  to="/auth/signup"
-                  className="inline-flex items-center rounded-2xl border border-slate-300 px-5 py-2 font-medium text-slate-900 transition hover:bg-slate-100"
-                >
-                  Crea il tuo profilo
-                </Link>
-              </div>
-            </div>
-            <div className="relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 text-white shadow-lg">
-              <div className="relative z-10 space-y-4">
-                <h2 className="text-lg font-semibold">Perché unirti a TalentALB?</h2>
-                <ul className="space-y-3 text-sm leading-relaxed text-slate-200">
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1 inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                    <span>Annunci curati da aziende qualificate del network.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1 inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                    <span>Processo di candidatura semplice, veloce e trasparente.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1 inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                    <span>Supporto del team TalentALB in ogni fase del percorso.</span>
-                  </li>
-                </ul>
-                <div className="rounded-2xl border border-white/20 bg-white/10 p-4 text-xs font-medium uppercase tracking-wide text-white/80">
-                  +{Math.max(totalElements, 0)} posizioni seguite ogni mese
-                </div>
-              </div>
-              <div className="absolute -right-12 -top-16 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
-              <div className="absolute -bottom-16 left-10 h-40 w-40 rounded-full bg-emerald-500/30 blur-3xl" />
-            </div>
+      <main className="mx-auto max-w-5xl px-4 pb-16">
+        <section className="py-12 text-center sm:py-16">
+          <p className="text-xs font-medium uppercase tracking-[0.28em] text-slate-500">
+            Job board TalentALB
+          </p>
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+            Tutte le opportunità, subito disponibili
+          </h1>
+          <p className="mt-4 mx-auto max-w-2xl text-sm text-slate-600">
+            Sfoglia le posizioni aperte senza effettuare l&apos;accesso: ogni offerta è consultabile e candidabile in
+            pochi passaggi. Quando troverai il ruolo giusto, potrai inviare la tua candidatura direttamente da qui.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm">
+            <a
+              href="#jobs"
+              className="inline-flex items-center rounded-full bg-slate-900 px-5 py-2 font-medium text-white transition hover:bg-slate-800"
+            >
+              Esplora le offerte
+            </a>
+            <Link
+              to="/auth/signup"
+              className="inline-flex items-center rounded-full border border-slate-200 px-5 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
+            >
+              Scopri TalentALB
+            </Link>
           </div>
+          {totalElements > 0 && (
+            <p className="mt-6 text-xs text-slate-500">
+              {totalElements} posizioni pubblicate in questo momento
+            </p>
+          )}
         </section>
 
         {feedback && (
           <div
-            className={`mb-6 rounded-2xl border px-4 py-3 text-sm shadow-sm ${
+            className={`mb-8 rounded-xl border px-4 py-3 text-sm ${
               feedback.kind === "success"
-                ? "border-emerald-100 bg-emerald-50 text-emerald-800"
-                : "border-rose-100 bg-rose-50 text-rose-800"
+                ? "border-emerald-100 bg-emerald-50 text-emerald-700"
+                : "border-rose-100 bg-rose-50 text-rose-700"
             }`}
           >
             {feedback.message}
           </div>
         )}
 
-        <section id="jobs" className="grid gap-8 lg:grid-cols-[2fr_1fr]">
+        <section id="jobs" className="grid gap-8 lg:grid-cols-[7fr_3fr]">
           <div className="space-y-6">
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="rounded-2xl border border-slate-200 bg-white p-5">
               <form onSubmit={handleSubmitFilters} className="grid gap-4 sm:grid-cols-3 sm:items-end">
                 <div className="sm:col-span-2">
                   <Label htmlFor="search">Parola chiave</Label>
                   <Input
                     id="search"
                     name="search"
-                    placeholder="es. marketing, sviluppatore, fintech"
+                    placeholder="es. product manager, sviluppatore, marketing"
                     value={formState.q}
                     onChange={(event) => setFormState((prev) => ({ ...prev, q: event.target.value }))}
                   />
@@ -316,19 +298,19 @@ export default function JobBoardPage() {
                     onChange={(event) => setFormState((prev) => ({ ...prev, city: event.target.value }))}
                   />
                 </div>
-                <div className="flex gap-2 sm:col-span-3">
+                <div className="flex flex-col gap-2 sm:col-span-3 sm:flex-row sm:items-center">
                   <button
                     type="submit"
-                    className="inline-flex flex-1 items-center justify-center rounded-2xl bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-900/90"
+                    className="inline-flex flex-1 items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
                   >
                     Cerca offerte
                   </button>
                   <button
                     type="button"
                     onClick={handleResetFilters}
-                    className="inline-flex items-center justify-center rounded-2xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+                    className="inline-flex items-center justify-center rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
                   >
-                    Reset
+                    Azzera filtri
                   </button>
                 </div>
               </form>
@@ -345,7 +327,7 @@ export default function JobBoardPage() {
                   {Array.from({ length: 3 }).map((_, index) => (
                     <div
                       key={index}
-                      className="animate-pulse rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+                      className="animate-pulse rounded-2xl border border-slate-200 bg-white p-5"
                     >
                       <div className="h-4 w-1/3 rounded bg-slate-200" />
                       <div className="mt-3 h-6 w-2/3 rounded bg-slate-200" />
@@ -357,9 +339,9 @@ export default function JobBoardPage() {
               )}
 
               {!loading && error && (
-                <div className="rounded-3xl border border-rose-100 bg-rose-50 p-6 text-sm text-rose-800 shadow-sm">
+                <div className="rounded-2xl border border-rose-100 bg-rose-50 p-5 text-sm text-rose-700">
                   <p className="font-medium">Si è verificato un problema</p>
-                  <p className="mt-1 text-rose-700">{error}</p>
+                  <p className="mt-1">{error}</p>
                   <button
                     type="button"
                     onClick={() => {
@@ -367,7 +349,7 @@ export default function JobBoardPage() {
                       setPage(0);
                       setActiveFilters({ ...activeFilters });
                     }}
-                    className="mt-4 inline-flex items-center rounded-2xl border border-rose-200 px-4 py-2 text-xs font-medium text-rose-700 transition hover:bg-rose-100"
+                    className="mt-4 inline-flex items-center rounded-full border border-rose-200 px-4 py-2 text-xs font-medium text-rose-700 transition hover:bg-rose-100"
                   >
                     Riprova
                   </button>
@@ -380,22 +362,18 @@ export default function JobBoardPage() {
 
               {!loading && !error && jobs.length > 0 && (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between text-sm text-slate-600">
+                  <div className="flex flex-col gap-1 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
                     <span>
                       Mostrando {jobs.length} di {totalElements} offerte
                     </span>
                     <span>Pagina {page + 1} di {Math.max(totalPages, 1)}</span>
                   </div>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {jobs.map((job) => (
                       <JobCard key={job.id} job={job} onApply={handleApply} />
                     ))}
                   </div>
-                  <Pagination
-                    page={page}
-                    totalPages={totalPages}
-                    onPageChange={setPage}
-                  />
+                  <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
                 </div>
               )}
             </div>
@@ -428,23 +406,23 @@ function JobCard({ job, onApply }: JobCardProps) {
   const expiresLabel = job.expiresAt ? `Scade ${formatRelativeTime(job.expiresAt)}` : null;
 
   return (
-    <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-300 hover:shadow-md">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
+    <article className="rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-slate-300 hover:shadow-sm">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div className="space-y-1">
           <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
             {job.status ? beautifyEnum(job.status) : "Pubblicazione"}
           </div>
-          <h2 className="mt-1 text-xl font-semibold text-slate-900">{job.title}</h2>
-          {location && <p className="mt-1 text-sm text-slate-600">{location}</p>}
+          <h2 className="text-lg font-semibold text-slate-900">{job.title}</h2>
+          {location && <p className="text-sm text-slate-600">{location}</p>}
         </div>
-        <div className="text-right text-sm text-slate-500">
+        <div className="text-sm text-slate-500 sm:text-right">
           {publishedLabel && <p>{publishedLabel}</p>}
           {expiresLabel && <p className="text-xs text-slate-400">{expiresLabel}</p>}
         </div>
       </div>
 
       {badges.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
           {badges.map((badge) => (
             <Badge key={badge as string}>{beautifyEnum(badge as string)}</Badge>
           ))}
@@ -458,12 +436,12 @@ function JobCard({ job, onApply }: JobCardProps) {
       )}
 
       {requirements.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-4 border-t border-slate-100 pt-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Requisiti principali</p>
           <ul className="mt-2 space-y-1 text-sm text-slate-600">
             {requirements.map((req, index) => (
               <li key={index} className="flex items-start gap-2">
-                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-slate-400" />
+                <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-slate-400" />
                 <span>{req}</span>
               </li>
             ))}
@@ -471,24 +449,22 @@ function JobCard({ job, onApply }: JobCardProps) {
         </div>
       )}
 
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-4 text-sm">
+      <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-4 text-sm sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="font-medium text-slate-900">{salary}</p>
-          {job.expiresAt && (
-            <p className="text-xs text-slate-500">{expiresLabel}</p>
-          )}
+          {job.expiresAt && <p className="text-xs text-slate-500">{expiresLabel}</p>}
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             type="button"
             onClick={() => onApply(job)}
-            className="inline-flex items-center rounded-2xl bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-900/90"
+            className="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
           >
             Candidati ora
           </button>
           <a
             href="#candidature"
-            className="inline-flex items-center rounded-2xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+            className="inline-flex items-center rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
           >
             Salva per dopo
           </a>
@@ -506,25 +482,24 @@ function ApplicationsPanel({ applications }: ApplicationsPanelProps) {
   return (
     <aside
       id="candidature"
-      className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:sticky lg:top-28"
+      className="space-y-5 rounded-2xl border border-slate-200 bg-white p-5 lg:sticky lg:top-28"
     >
-      <div>
+      <div className="space-y-2">
         <h2 className="text-lg font-semibold text-slate-900">Le tue candidature</h2>
-        <p className="mt-2 text-sm text-slate-600">
-          Tieni traccia delle posizioni per cui hai inviato il profilo. Salveremo le candidature direttamente sul tuo
-          dispositivo.
+        <p className="text-sm text-slate-600">
+          Salviamo in locale le posizioni che scegli di candidare così puoi ritrovarle rapidamente.
         </p>
       </div>
 
       {applications.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-5 text-sm text-slate-600">
+        <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
           Nessuna candidatura inviata al momento. Seleziona <span className="font-medium text-slate-900">"Candidati ora"</span>
           su una posizione per creare la tua prima candidatura.
         </div>
       ) : (
-        <ul className="space-y-4">
+        <ul className="space-y-3">
           {applications.map((app) => (
-            <li key={app.id} className="rounded-2xl border border-slate-200 p-4">
+            <li key={app.id} className="rounded-xl border border-slate-200 p-4">
               <div className="text-sm font-semibold text-slate-900">{app.jobTitle}</div>
               <div className="mt-1 text-xs uppercase tracking-wide text-slate-500">
                 Inviata il {formatDate(app.createdAt)}
@@ -601,10 +576,10 @@ function ApplicationDialog({ job, onClose, onSubmit }: ApplicationDialogProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 px-4 py-10"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/55 px-4 py-10"
       onClick={handleOverlayClick}
     >
-      <div className="relative w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-6 shadow-xl">
+      <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-lg">
         <button
           type="button"
           onClick={onClose}
@@ -614,8 +589,8 @@ function ApplicationDialog({ job, onClose, onSubmit }: ApplicationDialogProps) {
           ✕
         </button>
         <div className="pr-8">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Candidatura rapida</p>
-          <h2 className="mt-1 text-2xl font-semibold text-slate-900">{job.title}</h2>
+          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Candidatura rapida</p>
+          <h2 className="mt-1 text-xl font-semibold text-slate-900">{job.title}</h2>
           <p className="mt-1 text-sm text-slate-600">{formatLocation(job) || "Azienda del network TalentALB"}</p>
         </div>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -679,13 +654,13 @@ function ApplicationDialog({ job, onClose, onSubmit }: ApplicationDialogProps) {
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex items-center justify-center rounded-2xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+              className="inline-flex items-center justify-center rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
             >
               Annulla
             </button>
             <button
               type="submit"
-              className="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-900/90"
+              className="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
             >
               Invia candidatura
             </button>
@@ -708,7 +683,7 @@ function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
   const canNext = page + 1 < totalPages;
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
       <span>
         Pagina <span className="font-semibold text-slate-900">{page + 1}</span> di {totalPages}
       </span>
@@ -717,7 +692,7 @@ function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
           type="button"
           onClick={() => canPrev && onPageChange(page - 1)}
           disabled={!canPrev}
-          className="inline-flex items-center rounded-2xl border border-slate-200 px-4 py-2 font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
         >
           Precedente
         </button>
@@ -725,7 +700,7 @@ function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
           type="button"
           onClick={() => canNext && onPageChange(page + 1)}
           disabled={!canNext}
-          className="inline-flex items-center rounded-2xl bg-slate-900 px-4 py-2 font-medium text-white shadow-sm transition hover:bg-slate-900/90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
         >
           Successiva
         </button>
@@ -740,15 +715,15 @@ type EmptyStateProps = {
 
 function EmptyState({ onClearFilters }: EmptyStateProps) {
   return (
-    <div className="rounded-3xl border border-dashed border-slate-200 bg-white p-12 text-center text-slate-600 shadow-sm">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-2xl">🔍</div>
-      <h3 className="mt-6 text-lg font-semibold text-slate-900">Nessuna offerta trovata</h3>
+    <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-10 text-center text-slate-600">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-xl">🔍</div>
+      <h3 className="mt-5 text-lg font-semibold text-slate-900">Nessuna offerta trovata</h3>
       <p className="mt-2 text-sm">
-        Prova a modificare i filtri di ricerca oppure torna più tardi: nuove posizioni vengono aggiunte ogni settimana.
+        Modifica i filtri di ricerca oppure torna più tardi: il job board viene aggiornato di frequente con nuove posizioni.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <a
-          className="inline-flex items-center rounded-2xl bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-900/90"
+          className="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
           href="#"
         >
           Ricevi aggiornamenti
@@ -757,7 +732,7 @@ function EmptyState({ onClearFilters }: EmptyStateProps) {
           <button
             type="button"
             onClick={onClearFilters}
-            className="inline-flex items-center rounded-2xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+            className="inline-flex items-center rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
           >
             Rimuovi filtri
           </button>
@@ -769,7 +744,7 @@ function EmptyState({ onClearFilters }: EmptyStateProps) {
 
 function Badge({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+    <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
       {children}
     </span>
   );
@@ -777,7 +752,7 @@ function Badge({ children }: { children: ReactNode }) {
 
 function Label({ children, htmlFor }: { children: ReactNode; htmlFor?: string }) {
   return (
-    <label htmlFor={htmlFor} className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <label htmlFor={htmlFor} className="mb-1.5 block text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
       {children}
     </label>
   );
@@ -787,7 +762,7 @@ function Input(props: InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className={`h-11 w-full rounded-2xl border border-slate-200 bg-white px-3 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 ${
+      className={`h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900/10 ${
         props.className ?? ""
       }`}
     />
@@ -798,7 +773,7 @@ function Textarea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       {...props}
-      className={`w-full rounded-2xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 ${
+      className={`w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900/10 ${
         props.className ?? ""
       }`}
     />
