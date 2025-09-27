@@ -1,43 +1,140 @@
 import { useEffect, useState } from "react";
-type Draft = { name?: string; legalName?: string; website?: string; size?: string; industry?: string; city?: string; region?: string; countryCode?: string; description?: string; logoUrl?: string; status?: string; };
+import { useTranslations } from "@/shared/i18n/I18nProvider";
+
+type Draft = {
+  name?: string;
+  legalName?: string;
+  website?: string;
+  size?: string;
+  industry?: string;
+  city?: string;
+  region?: string;
+  countryCode?: string;
+  description?: string;
+  logoUrl?: string;
+  status?: string;
+};
+
 const KEY = "company_profile_draft";
 
-export default function CompanyProfileEdit() {
-  const [draft, setDraft] = useState<Draft>({ status: "ACTIVE" });
-  useEffect(() => { try { const saved = localStorage.getItem(KEY); if (saved) setDraft(JSON.parse(saved)); } catch {} }, []);
-  function save() { localStorage.setItem(KEY, JSON.stringify(draft)); alert("Bozza salvata (localStorage)."); }
+type FieldProps = {
+  label: string;
+  name: string;
+  value?: string;
+  onChange: (value: string) => void;
+  type?: string;
+};
 
-  function Field({ label, name, value, onChange, type="text"}: any) {
-    return (
-      <label className="block mb-3">
-        <span className="block text-sm font-medium mb-1">{label}</span>
-        <input className="w-full rounded-2xl border p-3 shadow-sm focus:outline-none focus:ring" name={name} value={value || ""} onChange={(e)=>onChange(e.target.value)} type={type}/>
-      </label>
-    );
+function Field({ label, name, value, onChange, type = "text" }: FieldProps) {
+  return (
+    <label className="mb-3 block">
+      <span className="mb-1 block text-sm font-medium">{label}</span>
+      <input
+        className="w-full rounded-2xl border p-3 shadow-sm focus:outline-none focus:ring"
+        name={name}
+        value={value || ""}
+        onChange={(e) => onChange(e.target.value)}
+        type={type}
+      />
+    </label>
+  );
+}
+
+export default function CompanyProfileEdit() {
+  const t = useTranslations();
+  const [draft, setDraft] = useState<Draft>({ status: "ACTIVE" });
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(KEY);
+      if (saved) setDraft(JSON.parse(saved));
+    } catch {
+      // ignore malformed drafts
+    }
+  }, []);
+
+  function save() {
+    localStorage.setItem(KEY, JSON.stringify(draft));
+    window.alert(t("companyProfile.saveSuccess"));
   }
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Profilo azienda</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <Field label="Name"      name="name"      value={draft.name}      onChange={(v:string)=>setDraft(d=>({...d,name:v}))}/>
-        <Field label="Legal name" name="legalName" value={draft.legalName} onChange={(v:string)=>setDraft(d=>({...d,legalName:v}))}/>
-        <Field label="Website"   name="website"   value={draft.website}   onChange={(v:string)=>setDraft(d=>({...d,website:v}))}/>
-        <Field label="Size"      name="size"      value={draft.size}      onChange={(v:string)=>setDraft(d=>({...d,size:v}))}/>
-        <Field label="Industry"  name="industry"  value={draft.industry}  onChange={(v:string)=>setDraft(d=>({...d,industry:v}))}/>
-        <Field label="City"      name="city"      value={draft.city}      onChange={(v:string)=>setDraft(d=>({...d,city:v}))}/>
-        <Field label="Region"    name="region"    value={draft.region}    onChange={(v:string)=>setDraft(d=>({...d,region:v}))}/>
-        <Field label="Country"   name="country"   value={draft.countryCode} onChange={(v:string)=>setDraft(d=>({...d,countryCode:v}))}/>
-        <Field label="Logo URL"  name="logoUrl"   value={draft.logoUrl}   onChange={(v:string)=>setDraft(d=>({...d,logoUrl:v}))}/>
-        <Field label="Status"    name="status"    value={draft.status}    onChange={(v:string)=>setDraft(d=>({...d,status:v}))}/>
+      <h2 className="mb-4 text-xl font-semibold">{t("companyProfile.title")}</h2>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <Field
+          label={t("companyProfile.form.name")}
+          name="name"
+          value={draft.name}
+          onChange={(v) => setDraft((d) => ({ ...d, name: v }))}
+        />
+        <Field
+          label={t("companyProfile.form.legalName")}
+          name="legalName"
+          value={draft.legalName}
+          onChange={(v) => setDraft((d) => ({ ...d, legalName: v }))}
+        />
+        <Field
+          label={t("companyProfile.form.website")}
+          name="website"
+          value={draft.website}
+          onChange={(v) => setDraft((d) => ({ ...d, website: v }))}
+        />
+        <Field
+          label={t("companyProfile.form.size")}
+          name="size"
+          value={draft.size}
+          onChange={(v) => setDraft((d) => ({ ...d, size: v }))}
+        />
+        <Field
+          label={t("companyProfile.form.industry")}
+          name="industry"
+          value={draft.industry}
+          onChange={(v) => setDraft((d) => ({ ...d, industry: v }))}
+        />
+        <Field
+          label={t("companyProfile.form.city")}
+          name="city"
+          value={draft.city}
+          onChange={(v) => setDraft((d) => ({ ...d, city: v }))}
+        />
+        <Field
+          label={t("companyProfile.form.region")}
+          name="region"
+          value={draft.region}
+          onChange={(v) => setDraft((d) => ({ ...d, region: v }))}
+        />
+        <Field
+          label={t("companyProfile.form.country")}
+          name="country"
+          value={draft.countryCode}
+          onChange={(v) => setDraft((d) => ({ ...d, countryCode: v }))}
+        />
+        <Field
+          label={t("companyProfile.form.logoUrl")}
+          name="logoUrl"
+          value={draft.logoUrl}
+          onChange={(v) => setDraft((d) => ({ ...d, logoUrl: v }))}
+        />
+        <Field
+          label={t("companyProfile.form.status")}
+          name="status"
+          value={draft.status}
+          onChange={(v) => setDraft((d) => ({ ...d, status: v }))}
+        />
       </div>
-      <label className="block mb-4">
-        <span className="block text-sm font-medium mb-1">Description</span>
-        <textarea className="w-full rounded-2xl border p-3 shadow-sm focus:outline-none focus:ring min-h-[120px]"
-          value={draft.description || ""} onChange={(e)=>setDraft(d=>({...d, description:e.target.value}))}/>
+      <label className="mb-4 block">
+        <span className="mb-1 block text-sm font-medium">{t("companyProfile.form.description")}</span>
+        <textarea
+          className="min-h-[120px] w-full rounded-2xl border p-3 shadow-sm focus:outline-none focus:ring"
+          value={draft.description || ""}
+          onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value }))}
+        />
       </label>
-      <button onClick={save} className="rounded-2xl bg-black text-white px-4 py-2">Salva bozza</button>
-      <p className="text-xs text-gray-500 mt-2">⚠️ Mock locale. Collegheremo le API `/api/company/me` quando pronte.</p>
+      <button onClick={save} className="rounded-2xl bg-black px-4 py-2 text-white">
+        {t("common.actions.saveDraft")}
+      </button>
+      <p className="mt-2 text-xs text-gray-500">{t("companyProfile.draftNotice")}</p>
     </div>
   );
 }

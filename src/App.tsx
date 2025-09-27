@@ -1,11 +1,11 @@
 import React, { useMemo, useState, createContext, useContext } from "react";
 
 /**
- * Signup UI con toast successo/errore e redirect automatico alla piattaforma.
- * Cambia qui l'URL della piattaforma:
+ * Signup UI with success/error toast and automatic redirect to the platform.
+ * Update the platform URL here:
  */
-const PLATFORM_URL = "/app";           // <— metti il tuo path/URL reale
-const REDIRECT_DELAY_MS = 1200;        // tempo per far vedere il toast
+const PLATFORM_URL = "/app";           // <— set your real path/URL here
+const REDIRECT_DELAY_MS = 1200;        // delay to show the toast
 
 // ------------ Tipi ------------
 

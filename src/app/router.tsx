@@ -9,6 +9,8 @@ import TalentSearch from "@/app/features/search/pages/TalentSearch";
 import AppLanding from "@/app/features/home/AppLanding";
 import JobBoardPage from "@/features/job-board/JobBoardPage";
 import { ProtectedRoute, RoleSwitch } from "@/shared/components/Guard";
+import { useTranslations } from "@/shared/i18n/I18nProvider";
+import type { TranslationKey } from "@/shared/i18n/messages";
 
 export const router = createBrowserRouter([
   { path: "/", element: <JobBoardPage /> },
@@ -36,20 +38,40 @@ export const router = createBrowserRouter([
           // Candidate
           { path: "candidate", element: <CandidateDashboard /> },
           { path: "candidate/profile", element: <CandidateProfileEdit /> },
-          { path: "candidate/attachments", element: <div>CV & Allegati (coming soon)</div> },
-          { path: "candidate/skills", element: <div>Competenze (coming soon)</div> },
+          {
+            path: "candidate/attachments",
+            element: <ComingSoon translationKey="router.comingSoon.candidateAttachments" />,
+          },
+          {
+            path: "candidate/skills",
+            element: <ComingSoon translationKey="router.comingSoon.candidateSkills" />,
+          },
 
           // Company
           { path: "company", element: <CompanyDashboard /> },
           { path: "company/profile", element: <CompanyProfileEdit /> },
-          { path: "company/users", element: <div>Utenti azienda (coming soon)</div> },
-          { path: "company/jobs", element: <div>Offerte di lavoro (coming soon)</div> },
+          {
+            path: "company/users",
+            element: <ComingSoon translationKey="router.comingSoon.companyUsers" />,
+          },
+          {
+            path: "company/jobs",
+            element: <ComingSoon translationKey="router.comingSoon.companyJobs" />,
+          },
 
           // Common (authed only)
-          { path: "settings", element: <div>Impostazioni account (coming soon)</div> },
+          {
+            path: "settings",
+            element: <ComingSoon translationKey="router.comingSoon.accountSettings" />,
+          },
         ],
       },
     ],
   },
   { path: "*", element: <div className="p-6">Not Found</div> },
 ]);
+
+function ComingSoon({ translationKey }: { translationKey: TranslationKey }) {
+  const t = useTranslations();
+  return <div className="p-6">{t(translationKey)}</div>;
+}
