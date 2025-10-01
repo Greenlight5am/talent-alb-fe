@@ -36,6 +36,12 @@ function LanguageDropdown({ options, value, onChange, className = "" }: Language
   
   const selectedOption = options.find(opt => opt.value === value);
 
+  useEffect(() => {
+    if (isOpen) {
+      setIsOpen(false);
+    }
+  }, [value, isOpen]);
+
   const handleSelect = (optionValue: string) => {
     onChange(optionValue);
     setIsOpen(false);
