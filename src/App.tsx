@@ -618,6 +618,24 @@ function CompanyForm() {
 
 function LanguageSwitcher() {
   const { lang, setLang, t } = useI18n();
+
+  const selectId = "language-switcher";
+  return (
+    <label htmlFor={selectId} className="flex flex-col text-sm text-gray-700">
+      <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+        {t("languageLabel")}
+      </span>
+      <select
+        id={selectId}
+        value={lang}
+        onChange={(event) => setLang(event.target.value as Language)}
+        className="mt-1 rounded-full border border-gray-300 bg-white px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-black/70"
+      >
+        <option value="it">{t("languageName_it")}</option>
+        <option value="en">{t("languageName_en")}</option>
+      </select>
+    </label>
+
   const options: Array<{ value: Language; label: string }> = [
     { value: "it", label: t("languageName_it") },
     { value: "en", label: t("languageName_en") },
@@ -646,6 +664,7 @@ function LanguageSwitcher() {
         ))}
       </div>
     </fieldset>
+
   );
 }
 
