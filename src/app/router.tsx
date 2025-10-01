@@ -20,10 +20,19 @@ export const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { index: true, element: <AppLanding /> },
-      { path: "search", element: <TalentSearch /> },
       {
         element: <ProtectedRoute />,
         children: [
+          {
+            path: "search",
+            element: (
+              <RoleSwitch
+                candidate={<Navigate to="/app/candidate" replace />}
+                employer={<TalentSearch />}
+                admin={<TalentSearch />}
+              />
+            ),
+          },
           {
             path: "me",
             element: (

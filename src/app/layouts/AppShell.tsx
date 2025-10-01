@@ -12,19 +12,19 @@ export default function AppShell() {
   const t = useTranslations();
 
   const candidateMenu = [
-    { to: "/app/candidate", label: t("appShell.menu.candidate.dashboard") },
+    { to: "/app/candidate", label: t("appShell.menu.candidate.dashboard"), end: true },
     { to: "/app/candidate/profile", label: t("appShell.menu.candidate.profile") },
     { to: "/app/candidate/attachments", label: t("appShell.menu.candidate.attachments") },
     { to: "/app/candidate/skills", label: t("appShell.menu.candidate.skills") },
   ];
   const companyMenu = [
-    { to: "/app/company", label: t("appShell.menu.company.dashboard") },
+    { to: "/app/company", label: t("appShell.menu.company.dashboard"), end: true },
     { to: "/app/company/profile", label: t("appShell.menu.company.profile") },
     { to: "/app/company/users", label: t("appShell.menu.company.users") },
     { to: "/app/company/jobs", label: t("appShell.menu.company.jobs") },
+    { to: "/app/search", label: t("appShell.menu.common.search") },
   ];
   const commonMenu = [
-    { to: "/app/search", label: t("appShell.menu.common.search") },
     ...(!isGuest ? [{ to: "/app/settings", label: t("appShell.menu.common.settings") }] : []),
   ];
 
@@ -38,10 +38,10 @@ export default function AppShell() {
   sections.push({ title: t("appShell.sections.common"), items: commonMenu });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-stone-50 via-white to-stone-100 text-slate-900">
+    <div className="min-h-screen bg-white text-slate-900">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6 lg:flex-row lg:py-12">
         <aside className="lg:w-72">
-          <div className="rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-xl shadow-slate-900/5 backdrop-blur supports-[backdrop-filter]:bg-white/60 lg:sticky lg:top-10 lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:sticky lg:top-10 lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto">
             <div className="space-y-2">
               <span className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">
                 {t("common.appName")}
@@ -73,7 +73,7 @@ export default function AppShell() {
           </div>
         </aside>
         <main className="flex-1">
-          <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-xl shadow-slate-900/5 backdrop-blur supports-[backdrop-filter]:bg-white/70 sm:p-8">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
             {isGuest && (
               <div className="mb-6 flex flex-wrap justify-end gap-3">
                 <button
@@ -94,12 +94,13 @@ export default function AppShell() {
   );
 }
 
-type NavItem = { to: string; label: string };
+type NavItem = { to: string; label: string; end?: boolean };
 
-function Item({ to, label }: NavItem) {
+function Item({ to, label, end }: NavItem) {
   return (
     <NavLink
       to={to}
+      end={end}
       className={({ isActive }) =>
         `block transform rounded-2xl px-3 py-2 text-sm font-medium transition-all duration-150 ${
           isActive

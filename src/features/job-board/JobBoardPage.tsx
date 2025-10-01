@@ -75,6 +75,7 @@ type ApplicationFormState = {
 const PAGE_SIZE = 6;
 const DEFAULT_FILTERS: FiltersState = { q: "", city: "", country: "" };
 const APPLICATIONS_STORAGE_KEY = "talentalb:applications";
+type SortOption = "relevance" | "newest" | "salaryHigh" | "salaryLow";
 
 const baseButtonClasses =
   "inline-flex items-center justify-center rounded-full text-sm font-medium transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500";
@@ -95,6 +96,10 @@ export default function JobBoardPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedJob, setSelectedJob] = useState<JobPostDto | null>(null);
   const [feedback, setFeedback] = useState<FeedbackMessage>(null);
+  const [workMode, setWorkMode] = useState<string | null>(null);
+  const [seniority, setSeniority] = useState<string | null>(null);
+  const [employmentType, setEmploymentType] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<SortOption>("relevance");
 
   const [applications, setApplications] = usePersistentState<JobApplication[]>(
     APPLICATIONS_STORAGE_KEY,
@@ -145,6 +150,37 @@ export default function JobBoardPage() {
   const jobs = jobsPage?.content ?? [];
   const totalPages = jobsPage?.totalPages ?? 0;
   const totalElements = jobsPage?.totalElements ?? 0;
+
+  const optionsFromJobs = useMemo(() => {
+    const modes = new Set<string>();
+    const seniorities = new Set<string>();
+    const contracts = new Set<string>();
+    for (const j of jobs) {
+      if (j.distanceType) modes.add(j.distanceType);
+      if (j.seniority) seniorities.add(j.seniority);
+      if (j.employmentType) contracts.add(j.employmentType);
+    }
+    return {
+      modes: Array.from(modes),
+      seniorities: Array.from(seniorities),
+      contracts: Array.from(contracts),
+    };
+  }, [jobs]);
+
+  const refinedJobs = useMemo(() => {
+    let list = jobs.slice();
+    if (workMode) list = list.filter((j) => j.distanceType === workMode);
+    if (seniority) list = list.filter((j) => j.seniority === seniority);
+    if (employmentType) list = list.filter((j) => j.employmentType === employmentType);
+    if (sortBy === "newest") {
+      list.sort((a, b) => new Date(b.publishedAt ?? 0).getTime() - new Date(a.publishedAt ?? 0).getTime());
+    } else if (sortBy === "salaryHigh") {
+      list.sort((a, b) => (Number(b.salaryMax ?? b.salaryMin ?? 0) as number) - (Number(a.salaryMax ?? a.salaryMin ?? 0) as number));
+    } else if (sortBy === "salaryLow") {
+      list.sort((a, b) => (Number(a.salaryMin ?? a.salaryMax ?? 0) as number) - (Number(b.salaryMin ?? b.salaryMax ?? 0) as number));
+    }
+    return list;
+  }, [jobs, workMode, seniority, employmentType, sortBy]);
 
   useEffect(() => {
     if (!feedback) return;
@@ -240,26 +276,18 @@ export default function JobBoardPage() {
       </header>
 
       <main className="mx-auto max-w-6xl px-6 pb-20">
-        <section className="py-12 text-center sm:py-20">
+        <section className="py-6 text-center sm:py-8">
           <p className="text-xs font-medium uppercase tracking-[0.28em] text-slate-500">
             {t("jobBoard.hero.eyebrow")}
           </p>
-          <h1 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
+          <h1 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
             {t("jobBoard.hero.title")}
           </h1>
-          <p className="mt-4 mx-auto max-w-2xl text-base leading-relaxed text-slate-600">
+          <p className="mt-2 mx-auto max-w-xl text-sm leading-relaxed text-slate-600">
             {t("jobBoard.hero.description")}
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3 text-base">
-            <a href="#jobs" className={`${primaryButtonClasses} px-4 py-2 font-semibold`}>
-              {t("jobBoard.hero.primaryCta")}
-            </a>
-            <Link to="/auth/signup" className={`${secondaryButtonClasses} px-4 py-2`}>
-              {t("jobBoard.hero.secondaryCta")}
-            </Link>
-          </div>
           {totalElements > 0 && (
-            <p className="mt-6 text-xs text-slate-500">
+            <p className="mt-3 text-xs text-slate-500">
               {t("jobBoard.hero.positionsCount", { count: totalElements })}
             </p>
           )}
@@ -267,6 +295,8 @@ export default function JobBoardPage() {
 
         {feedback && (
           <div
+            role="alert"
+            aria-live="polite"
             className={`mb-8 rounded-xl border px-4 py-3 text-sm ${
               feedback.kind === "success"
                 ? "border-emerald-100 bg-emerald-50 text-emerald-700"
@@ -279,56 +309,134 @@ export default function JobBoardPage() {
 
         <section id="jobs" className="grid gap-10 lg:grid-cols-[7fr_3fr]">
           <div className="space-y-6">
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <form onSubmit={handleSubmitFilters} className="grid gap-4 sm:grid-cols-3 sm:items-end">
-                <div className="sm:col-span-2">
-                  <Label htmlFor="search">{t("jobBoard.filters.keywordLabel")}</Label>
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:z-10">
+              <form onSubmit={handleSubmitFilters} className="flex gap-3 items-end">
+                <div className="flex-1">
                   <Input
                     id="search"
                     name="search"
                     placeholder={t("common.placeholders.searchKeyword")}
                     value={formState.q}
                     onChange={(event) => setFormState((prev) => ({ ...prev, q: event.target.value }))}
+                    isClearable
                   />
                 </div>
-                <div>
-                  <Label htmlFor="country">{t("jobBoard.filters.countryLabel")}</Label>
+                <div className="flex-1">
                   <Input
-                    id="country"
-                    name="country"
-                    placeholder={t("common.placeholders.searchCountry")}
-                    value={formState.country}
-                    onChange={(event) => setFormState((prev) => ({ ...prev, country: event.target.value }))}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="city">{t("jobBoard.filters.cityLabel")}</Label>
-                  <Input
-                    id="city"
-                    name="city"
+                    id="location"
+                    name="location"
                     placeholder={t("common.placeholders.searchCity")}
-                    value={formState.city}
-                    onChange={(event) => setFormState((prev) => ({ ...prev, city: event.target.value }))}
+                    value={[formState.city, formState.country].filter(Boolean).join(", ")}
+                    onChange={(event) => {
+                      const parsed = parseLocation(event.target.value);
+                      setFormState((prev) => ({ ...prev, city: parsed.city, country: parsed.country }));
+                    }}
+                    list="location-suggestions"
+                    isClearable
+                  />
+                  <datalist id="location-suggestions">
+                    <option value="Tirana, AL" />
+                    <option value="Durres, AL" />
+                    <option value="Shkoder, AL" />
+                    <option value="Roma, IT" />
+                    <option value="Milano, IT" />
+                    <option value="Napoli, IT" />
+                  </datalist>
+                </div>
+                <button
+                  type="submit"
+                  className={`${primaryButtonClasses} px-6 py-2.5 font-semibold text-sm`}
+                >
+                  {t("common.actions.searchJobs")}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleResetFilters}
+                  className={`${secondaryButtonClasses} px-4 py-2.5 text-sm`}
+                >
+                  {t("common.actions.resetFilters")}
+                </button>
+              </form>
+              {/* Quick refine controls */}
+              <div className="mt-3 flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("jobBoard.filters.workMode")}</span>
+                  <div className="flex gap-1">
+                    {optionsFromJobs.modes.map((m) => (
+                      <button
+                        key={m}
+                        type="button"
+                        onClick={() => setWorkMode((prev) => (prev === m ? null : m))}
+                        className={`${workMode === m ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-700"} rounded-full px-2 py-1 text-xs font-medium`}
+                      >
+                        {beautifyEnum(m)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("jobBoard.filters.seniority")}</span>
+                  <Dropdown
+                    options={[
+                      { value: "", label: t("jobBoard.filters.all") },
+                      ...optionsFromJobs.seniorities.map((s) => ({
+                        value: s,
+                        label: beautifyEnum(s)
+                      }))
+                    ]}
+                    value={seniority ?? ""}
+                    onChange={(value) => setSeniority(value || null)}
+                    placeholder={t("jobBoard.filters.all")}
+                    searchPlaceholder={t("common.placeholders.search")}
                   />
                 </div>
-                <div className="flex flex-col gap-2 sm:col-span-3 sm:flex-row sm:items-center">
-                  <button
-                    type="submit"
-                    className={`${primaryButtonClasses} flex-1 px-4 py-2.5 font-semibold text-base`}
-                  >
-                    {t("common.actions.searchJobs")}
-                  </button>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("jobBoard.filters.employmentType")}</span>
+                  <Dropdown
+                    options={[
+                      { value: "", label: t("jobBoard.filters.allTypes") },
+                      ...optionsFromJobs.contracts.map((c) => ({
+                        value: c,
+                        label: beautifyEnum(c)
+                      }))
+                    ]}
+                    value={employmentType ?? ""}
+                    onChange={(value) => setEmploymentType(value || null)}
+                    placeholder={t("jobBoard.filters.allTypes")}
+                    searchPlaceholder={t("common.placeholders.search")}
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("jobBoard.filters.sortBy")}</span>
+                  <Dropdown
+                    options={[
+                      { value: "relevance", label: t("jobBoard.filters.relevance") },
+                      { value: "newest", label: t("jobBoard.filters.newest") },
+                      { value: "salaryHigh", label: t("jobBoard.filters.salaryHigh") },
+                      { value: "salaryLow", label: t("jobBoard.filters.salaryLow") }
+                    ]}
+                    value={sortBy}
+                    onChange={(value) => setSortBy(value as SortOption)}
+                    placeholder={t("jobBoard.filters.relevance")}
+                    searchPlaceholder={t("common.placeholders.search")}
+                  />
+                </div>
+
+                {(workMode || seniority || employmentType) && (
                   <button
                     type="button"
-                    onClick={handleResetFilters}
-                    className={`${secondaryButtonClasses} px-4 py-2.5 text-base`}
+                    onClick={() => { setWorkMode(null); setSeniority(null); setEmploymentType(null); setSortBy("relevance"); }}
+                    className={`${secondaryButtonClasses} px-3 py-1 text-xs`}
                   >
-                    {t("common.actions.resetFilters")}
+                    {t("jobBoard.filters.clearRefinements")}
                   </button>
-                </div>
-              </form>
+                )}
+              </div>
               {hasActiveFilters && (
-                <p className="mt-4 text-sm uppercase tracking-wide text-slate-500">
+                <p className="mt-2 text-xs uppercase tracking-wide text-slate-500">
                   {t("jobBoard.filters.active", {
                     summary: filtersSummary || t("common.info.none"),
                   })}
@@ -336,9 +444,9 @@ export default function JobBoardPage() {
               )}
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {loading && (
-                <div className="space-y-4">
+                <div className="space-y-4" role="status" aria-live="polite" aria-busy="true">
                   {Array.from({ length: 3 }).map((_, index) => (
                     <div
                       key={index}
@@ -375,14 +483,14 @@ export default function JobBoardPage() {
                 <EmptyState onClearFilters={hasActiveFilters ? handleResetFilters : undefined} />
               )}
 
-              {!loading && !error && jobs.length > 0 && (
-                <div className="space-y-5">
-                  <div className="flex flex-col gap-1 text-base text-slate-600 sm:flex-row sm:items-center sm:justify-between">
-                    <span>{t("jobBoard.list.showing", { current: jobs.length, total: totalElements })}</span>
+              {!loading && !error && refinedJobs.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex flex-col gap-1 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+                    <span>{t("jobBoard.list.showing", { current: refinedJobs.length, total: totalElements })}</span>
                     <span>{t("jobBoard.list.page", { page: page + 1, total: Math.max(totalPages, 1) })}</span>
                   </div>
-                  <div className="space-y-4">
-                    {jobs.map((job) => (
+                  <div className="space-y-3">
+                    {refinedJobs.map((job) => (
                       <JobCard key={job.id} job={job} onApply={handleApply} />
                     ))}
                   </div>
@@ -428,7 +536,7 @@ function JobCard({ job, onApply }: JobCardProps) {
     : null;
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-slate-300 hover:shadow-md">
+    <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-slate-300 hover:shadow-md">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
           <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -444,7 +552,7 @@ function JobCard({ job, onApply }: JobCardProps) {
       </div>
 
       {badges.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-2 text-sm text-slate-600">
+        <div className="mt-3 flex flex-wrap gap-2 text-sm text-slate-600">
           {badges.map((badge) => (
             <Badge key={badge as string}>{beautifyEnum(badge as string)}</Badge>
           ))}
@@ -452,18 +560,18 @@ function JobCard({ job, onApply }: JobCardProps) {
       )}
 
       {job.description && (
-        <p className="mt-4 text-base leading-relaxed text-slate-600">{truncate(job.description, 260)}</p>
+        <p className="mt-3 text-sm leading-relaxed text-slate-600">{truncate(job.description, 200)}</p>
       )}
 
       {requirements.length > 0 && (
-        <div className="mt-4 border-t border-slate-100 pt-4">
+        <div className="mt-3 border-t border-slate-100 pt-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
             {t("jobBoard.jobCard.requirementsTitle")}
           </p>
-          <ul className="mt-2 space-y-2 text-base text-slate-600">
+          <ul className="mt-1 space-y-1 text-sm text-slate-600">
             {requirements.map((req, index) => (
               <li key={index} className="flex items-start gap-2">
-                <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-slate-400" />
+                <span className="mt-1.5 inline-block h-1 w-1 rounded-full bg-slate-400" />
                 <span>{req}</span>
               </li>
             ))}
@@ -471,7 +579,7 @@ function JobCard({ job, onApply }: JobCardProps) {
         </div>
       )}
 
-      <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-4 text-base sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-4 flex flex-col gap-2 border-t border-slate-100 pt-3 text-sm sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="font-medium text-slate-900">{salary}</p>
           {job.expiresAt && <p className="text-xs text-slate-500">{expiresLabel}</p>}
@@ -480,11 +588,11 @@ function JobCard({ job, onApply }: JobCardProps) {
           <button
             type="button"
             onClick={() => onApply(job)}
-            className={`${primaryButtonClasses} px-4 py-2.5 font-semibold text-base`}
+            className={`${primaryButtonClasses} px-4 py-2 font-semibold text-sm`}
           >
             {t("common.actions.applyNow")}
           </button>
-          <a href="#candidature" className={`${secondaryButtonClasses} px-4 py-2.5 text-base`}>
+          <a href="#candidature" className={`${secondaryButtonClasses} px-4 py-2 text-sm`}>
             {t("common.actions.saveForLater")}
           </a>
         </div>
@@ -784,14 +892,41 @@ function Label({ children, htmlFor }: { children: ReactNode; htmlFor?: string })
   );
 }
 
-function Input(props: InputHTMLAttributes<HTMLInputElement>) {
+type InputProps = InputHTMLAttributes<HTMLInputElement> & { isClearable?: boolean };
+
+function Input(props: InputProps) {
+  const { isClearable = false, className, onChange, value, disabled, readOnly, ...rest } = props;
+  const canClear = isClearable && !disabled && !readOnly && typeof value === "string" && value.length > 0;
+  const handleClear = () => {
+    if (onChange) {
+      onChange({ target: { value: "" } } as any);
+    }
+  };
   return (
-    <input
-      {...props}
-      className={`h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900/10 ${
-        props.className ?? ""
-      }`}
-    />
+    <div className="relative">
+      <input
+        {...rest}
+        value={value}
+        disabled={disabled}
+        readOnly={readOnly}
+        className={`h-11 w-full rounded-xl border border-slate-300 bg-white px-3 ${
+          isClearable ? "pr-10" : ""
+        } text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900/10 ${
+          className ?? ""
+        }`}
+        onChange={onChange}
+      />
+      {canClear && (
+        <button
+          type="button"
+          onClick={handleClear}
+          aria-label="Clear input"
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+        >
+          ✕
+        </button>
+      )}
+    </div>
   );
 }
 
@@ -937,4 +1072,135 @@ function usePersistentState<T>(key: string, defaultValue: T) {
   }, [key, state]);
 
   return [state, setState] as const;
+}
+
+type DropdownOption = {
+  value: string;
+  label: string;
+};
+
+type DropdownProps = {
+  options: DropdownOption[];
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  className?: string;
+  searchPlaceholder?: string;
+};
+
+function Dropdown({ options, value, onChange, placeholder = "Seleziona...", searchPlaceholder = "Cerca...", className = "" }: DropdownProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  const selectedOption = options.find(opt => opt.value === value);
+  const filteredOptions = options.filter(opt => 
+    opt.label.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  useEffect(() => {
+    if (isOpen) {
+      setSearchTerm("");
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleEscape);
+      return () => document.removeEventListener("keydown", handleEscape);
+    }
+  }, [isOpen]);
+
+  const handleSelect = (optionValue: string) => {
+    onChange(optionValue);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className={`relative ${className}`}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={`h-7 w-full rounded-full border border-slate-200 bg-white px-3 text-left text-xs font-medium text-slate-700 transition-colors hover:border-slate-300 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-200 ${className}`}
+      >
+        <span className="block truncate">
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
+        <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+          <svg
+            className={`h-3 w-3 text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
+      </button>
+
+      {isOpen && (
+        <>
+          <div 
+            className="fixed inset-0 z-[100]" 
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="absolute z-[110] mt-1 max-h-60 min-w-full w-max overflow-auto rounded-xl border border-slate-200 bg-white shadow-lg">
+            <div className="p-2">
+              <input
+                type="text"
+                placeholder={searchPlaceholder}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-200"
+                autoFocus
+              />
+            </div>
+            <ul className="max-h-48 overflow-auto">
+              {filteredOptions.map((option) => (
+                <li key={option.value}>
+                  <button
+                    type="button"
+                    onClick={() => handleSelect(option.value)}
+                    className={`w-full px-3 py-2 text-left text-xs hover:bg-slate-50 ${
+                      option.value === value ? "bg-slate-100 font-medium text-slate-900" : "text-slate-700"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                </li>
+              ))}
+              {filteredOptions.length === 0 && (
+                <li className="px-3 py-2 text-xs text-slate-500">
+                  Nessun risultato trovato
+                </li>
+              )}
+            </ul>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function parseLocation(input: string): { city: string; country: string } {
+  const value = input.trim();
+  if (!value) return { city: "", country: "" };
+  const parts = value.split(",").map((p) => p.trim()).filter(Boolean);
+  if (parts.length === 1) {
+    // Try to detect 2-letter country code
+    const token = parts[0];
+    if (/^[A-Za-z]{2}$/.test(token)) {
+      return { city: "", country: token.toUpperCase() };
+    }
+    return { city: token, country: "" };
+  }
+  const city = parts.slice(0, -1).join(", ");
+  const countryToken = parts[parts.length - 1];
+  const country = /^[A-Za-z]{2}$/.test(countryToken) ? countryToken.toUpperCase() : countryToken;
+  return { city, country };
 }

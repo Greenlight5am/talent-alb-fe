@@ -617,36 +617,32 @@ function CompanyForm() {
 // ------------ App ------------
 
 function LanguageSwitcher() {
-  const { lang, setLang, t } = useI18n();
-  const options: Array<{ value: Language; label: string }> = [
-    { value: "it", label: t("languageName_it") },
-    { value: "en", label: t("languageName_en") },
-  ];
-  return (
-    <fieldset className="flex flex-col items-end gap-2 text-xs text-gray-600" aria-label={t("languageLabel")}>
-      <legend className="font-medium uppercase tracking-wide text-[11px]">
-        {t("languageLabel")}
-      </legend>
-      <div className="inline-flex rounded-full border border-gray-200 bg-white p-1 shadow-sm">
-        {options.map((option) => (
-          <button
-            key={option.value}
-            type="button"
-            onClick={() => setLang(option.value)}
-            className={cx(
-              "rounded-full px-3 py-1 text-xs transition",
-              lang === option.value
-                ? "bg-black text-white shadow"
-                : "text-gray-600 hover:bg-gray-50"
-            )}
-            aria-pressed={lang === option.value}
-          >
-            {option.label}
-          </button>
-        ))}
-      </div>
-    </fieldset>
-  );
+    const { lang, setLang, t } = useI18n();
+    return (
+        <fieldset aria-label={t("languageLabel")} className="...">
+            <legend className="...">{t("languageLabel")}</legend>
+            <div role="radiogroup" className="...">
+                {(["it","en"] as const).map(v => (
+                    <label key={v} className="...">
+                        <input
+                            type="radio"
+                            name="lang"
+                            value={v}
+                            checked={lang === v}
+                            onChange={() => setLang(v)}
+                            className="sr-only"
+                        />
+                        <span className={cx(
+                            "rounded-full px-3 py-1 text-xs transition",
+                            lang === v ? "bg-black text-white shadow" : "text-gray-700 hover:bg-gray-100"
+                        )}>
+              {t(v === "it" ? "languageName_it" : "languageName_en")}
+            </span>
+                    </label>
+                ))}
+            </div>
+        </fieldset>
+    );
 }
 
 function AppContent() {

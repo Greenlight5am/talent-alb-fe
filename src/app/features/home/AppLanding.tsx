@@ -22,7 +22,7 @@ export default function AppLanding() {
 
   return (
     <div className="space-y-8 text-slate-900">
-      <section className="rounded-3xl border border-slate-200 bg-white/80 px-6 py-10 text-center shadow-xl shadow-slate-900/5 backdrop-blur supports-[backdrop-filter]:bg-white/70 sm:px-10">
+      <section className="rounded-3xl border border-slate-200 bg-white px-6 py-10 text-center shadow-sm sm:px-10">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">
           {t("landing.eyebrow")}
         </p>
@@ -59,7 +59,7 @@ export default function AppLanding() {
         />
       </section>
 
-      <section className="rounded-3xl border border-slate-200 bg-white/80 px-6 py-8 shadow-xl shadow-slate-900/5 backdrop-blur supports-[backdrop-filter]:bg-white/70 sm:px-8">
+      <section className="rounded-3xl border border-slate-200 bg-white px-6 py-8 shadow-sm sm:px-8">
         <h2 className="text-xl font-semibold tracking-tight">{t("landing.guest.title")}</h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
           {t("landing.guest.description")}
