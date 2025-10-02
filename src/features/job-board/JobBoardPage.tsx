@@ -343,7 +343,7 @@ export default function JobBoardPage() {
               {/* Quick refine controls */}
               <div className="mt-3 flex flex-wrap items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("jobBoard.filters.workMode")}</span>
+                  <span className="text-xs font-semibold tracking-wide text-slate-500">{t("jobBoard.filters.workMode")}</span>
                   <div className="flex gap-1">
                     {optionsFromJobs.modes.map((m) => (
                       <button
@@ -359,7 +359,7 @@ export default function JobBoardPage() {
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("jobBoard.filters.seniority")}</span>
+                  <span className="text-xs font-semibold tracking-wide text-slate-500">{t("jobBoard.filters.seniority")}</span>
                   <Dropdown
                     options={[
                       { value: "", label: t("jobBoard.filters.all") },
@@ -376,7 +376,7 @@ export default function JobBoardPage() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("jobBoard.filters.employmentType")}</span>
+                  <span className="text-xs font-semibold tracking-wide text-slate-500">{t("jobBoard.filters.employmentType")}</span>
                   <Dropdown
                     options={[
                       { value: "", label: t("jobBoard.filters.allTypes") },
@@ -393,7 +393,7 @@ export default function JobBoardPage() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("jobBoard.filters.sortBy")}</span>
+                  <span className="text-xs font-semibold tracking-wide text-slate-500">{t("jobBoard.filters.sortBy")}</span>
                   <Dropdown
                     options={[
                       { value: "relevance", label: t("jobBoard.filters.relevance") },
