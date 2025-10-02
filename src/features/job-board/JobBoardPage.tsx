@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { LanguageSwitcher } from "@/shared/i18n/LanguageSwitcher";
 import { useI18n, useTranslations, type TranslateFn } from "@/shared/i18n/I18nProvider";
 import { localeConfig } from "@/shared/i18n/localeConfig";
-import { JobApplication, useJobApplicationsStorage } from "@/features/job-board/useJobApplicationsStorage";
+import { useJobApplicationsStorage, type JobApplication } from "@/features/job-board/useJobApplicationsStorage";
 
 type JobPostDto = {
   id: string;
@@ -59,6 +59,12 @@ type ApplicationFormState = {
   phone: string;
   resumeUrl: string;
   message: string;
+};
+
+type ApplicationDialogProps = {
+  job: JobPostDto | null;
+  onClose: () => void;
+  onSubmit: (form: ApplicationFormState) => void;
 };
 
 const PAGE_SIZE = 6;
@@ -241,9 +247,6 @@ export default function JobBoardPage() {
               <a href="#jobs" className={`${ghostButtonClasses} px-3 py-2`}>
                 {t("jobBoard.nav.offers")}
               </a>
-              <a href="#candidature" className={`${ghostButtonClasses} px-3 py-2`}>
-                {t("jobBoard.nav.applications")}
-              </a>
               <Link to="/auth/signup" className={`${secondaryButtonClasses} px-3 py-2`}>
                 {t("common.actions.createProfile")}
               </Link>
@@ -292,7 +295,7 @@ export default function JobBoardPage() {
           </div>
         )}
 
-        <section id="jobs" className="grid gap-10 lg:grid-cols-[7fr_3fr]">
+        <section id="jobs" className="mx-auto max-w-4xl space-y-6">
           <div className="space-y-6">
             <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:z-10">
               <form onSubmit={handleSubmitFilters} className="flex gap-3 items-end">
@@ -483,7 +486,8 @@ export default function JobBoardPage() {
                 </div>
               )}
             </div>
-          </div>        </section>
+          </div>
+        </section>
       </main>
 
       <ApplicationDialog
