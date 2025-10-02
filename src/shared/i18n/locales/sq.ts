@@ -272,8 +272,7 @@ export const sq = {
       description:
         "Shfleto pozicionet e hapura pa hyrë në sistem: çdo ofertë mund të shihet dhe aplikohet me pak hapa. Kur të gjesh rolin e duhur, apliko direkt nga këtu.",
       primaryCta: "Eksploro ofertat",
-      secondaryCta: "Zbulo TalentALB",
-      positionsCount: "{count} pozicione të publikuara aktualisht",
+      secondaryCta: "Zbulo TalentALB"
     },
     filters: {
       keywordLabel: "Fjalë kyçe",

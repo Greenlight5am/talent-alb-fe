@@ -270,8 +270,7 @@ export const it = {
       description:
         "Sfoglia le posizioni aperte senza effettuare l'accesso: ogni offerta è consultabile e candidabile in pochi passaggi. Quando troverai il ruolo giusto, potrai inviare la tua candidatura direttamente da qui.",
       primaryCta: "Esplora le offerte",
-      secondaryCta: "Scopri TalentALB",
-      positionsCount: "{count} posizioni pubblicate in questo momento",
+      secondaryCta: "Scopri TalentALB"
     },
     filters: {
       keywordLabel: "Parola chiave",

@@ -1,4 +1,4 @@
-import {
+﻿import {
   useEffect,
   useMemo,
   useState,
@@ -274,11 +274,6 @@ export default function JobBoardPage() {
           <p className="mt-2 mx-auto max-w-xl text-sm leading-relaxed text-slate-600">
             {t("jobBoard.hero.description")}
           </p>
-          {totalElements > 0 && (
-            <p className="mt-3 text-xs text-slate-500">
-              {t("jobBoard.hero.positionsCount", { count: totalElements })}
-            </p>
-          )}
         </section>
 
         {feedback && (

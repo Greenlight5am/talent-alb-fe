@@ -271,8 +271,7 @@ export const en = {
       description:
         "Browse open positions without signing in: every offer can be viewed and applied to in just a few steps. When you find the right role you can submit your application directly from here.",
       primaryCta: "Explore jobs",
-      secondaryCta: "Discover TalentALB",
-      positionsCount: "{count} jobs currently published",
+      secondaryCta: "Discover TalentALB"
     },
     filters: {
       keywordLabel: "Keyword",
