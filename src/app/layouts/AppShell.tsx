@@ -51,8 +51,9 @@ export default function AppShell() {
               </p>
             </div>
             <LanguageSwitcher
-              className="mt-6 w-full"
-              selectClassName="rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+              hideLabel
+              className="mt-6 ml-auto"
+              selectClassName="bg-slate-50 hover:bg-white"
             />
             <nav className="mt-6 space-y-6 text-sm">
               {sections.map((section) => (

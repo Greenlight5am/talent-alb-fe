@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { FormEvent } from "react";
+import { Link } from "react-router-dom";
 import { getSessionAccount } from "@/app/features/auth/useSession";
 import { useTranslations } from "@/shared/i18n/I18nProvider";
 
@@ -8,7 +9,6 @@ type Seniority = "INTERN" | "JUNIOR" | "MID" | "SENIOR" | "LEAD";
 type DistanceType = "ONSITE" | "HYBRID" | "REMOTE";
 
 type CreateJobPostForm = {
-  companyId: string;
   title: string;
   description: string;
   requirements: string;
@@ -56,9 +56,12 @@ function parseDecimal(value: string): number | undefined {
 export default function JobPostCreate() {
   const t = useTranslations();
   const account = useMemo(() => getSessionAccount(), []);
+  const derivedCompanyId = useMemo(() => {
+    const directId = (account?.companyId as string | undefined) ||
+      ((account?.company as { id?: string } | undefined)?.id ?? "");
+    return directId?.trim() ?? "";
+  }, [account]);
   const [form, setForm] = useState<CreateJobPostForm>({
-    companyId: (account?.companyId as string | undefined) ||
-      ((account?.company as { id?: string } | undefined)?.id ?? ""),
     title: "",
     description: "",
     requirements: "",
@@ -84,7 +87,7 @@ export default function JobPostCreate() {
     setResult(null);
 
     try {
-      if (!form.companyId.trim()) {
+      if (!derivedCompanyId) {
         throw new Error(t("companyJobs.validation.companyId"));
       }
       if (!form.title.trim()) {
@@ -95,7 +98,7 @@ export default function JobPostCreate() {
       }
 
       const payload = {
-        companyId: form.companyId.trim(),
+        companyId: derivedCompanyId,
         title: form.title.trim(),
         description: form.description.trim(),
         requirements: form.requirements.trim() || undefined,
@@ -134,8 +137,6 @@ export default function JobPostCreate() {
 
   function resetForm() {
     setForm({
-      companyId: (account?.companyId as string | undefined) ||
-        ((account?.company as { id?: string } | undefined)?.id ?? ""),
       title: "",
       description: "",
       requirements: "",
@@ -156,23 +157,37 @@ export default function JobPostCreate() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">{t("companyJobs.title")}</h1>
-        <p className="mt-1 text-sm text-slate-600">{t("companyJobs.description")}</p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">{t("companyJobs.title")}</h1>
+          <p className="mt-1 text-sm text-slate-600">{t("companyJobs.description")}</p>
+        </div>
+        <Link
+          to="/app"
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition-transform duration-150 hover:-translate-y-0.5 hover:bg-slate-50 hover:text-slate-900"
+        >
+          <svg
+            className="h-4 w-4"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M11.78 5.22a.75.75 0 0 0-1.06 0L6.22 9.72a.75.75 0 0 0 0 1.06l4.5 4.5a.75.75 0 1 0 1.06-1.06L8.81 10l2.97-2.97a.75.75 0 0 0 0-1.06Z"
+              fill="currentColor"
+            />
+            <path
+              d="M5.75 10c0-.414.336-.75.75-.75h6.75a.75.75 0 0 1 0 1.5H6.5a.75.75 0 0 1-.75-.75Z"
+              fill="currentColor"
+            />
+          </svg>
+          <span>{t("common.actions.goBack")}</span>
+        </Link>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
-            {t("companyJobs.form.companyId")}
-            <input
-              className={baseFieldClasses}
-              value={form.companyId}
-              onChange={(e) => setForm((prev) => ({ ...prev, companyId: e.target.value }))}
-              placeholder="00000000-0000-0000-0000-000000000000"
-              required
-            />
-          </label>
           <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
             {t("companyJobs.form.title")}
             <input

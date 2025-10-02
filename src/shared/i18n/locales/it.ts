@@ -19,6 +19,7 @@ export const it = {
       receiveUpdates: "Ricevi aggiornamenti",
       clearFilters: "Rimuovi filtri",
       logout: "Esci",
+      goBack: "Torna alla home",
     },
     status: {
       publication: "Pubblicazione",
@@ -168,7 +169,7 @@ export const it = {
   companyJobs: {
     title: "Crea una nuova offerta di lavoro",
     description:
-      "Invia una POST a `/api/job-posts`: compila i campi obbligatori, aggiungi i dettagli facoltativi e premi \"Crea offerta\".",
+      "Racconta i dettagli principali della nuova posizione: compila il form e pubblicala per i candidati giusti.",
     form: {
       companyId: "ID azienda",
       title: "Titolo",
@@ -204,7 +205,7 @@ export const it = {
       errorMessage: "Impossibile creare l'offerta.",
     },
     validation: {
-      companyId: "Inserisci l'ID aziendale.",
+      companyId: "Non riusciamo a rilevare la tua azienda. Accedi con un profilo aziendale e riprova.",
       title: "Inserisci il titolo dell'offerta.",
       description: "Aggiungi una descrizione.",
     },

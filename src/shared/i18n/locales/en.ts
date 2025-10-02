@@ -21,6 +21,7 @@ export const en = {
       receiveUpdates: "Get updates",
       clearFilters: "Clear filters",
       logout: "Log out",
+      goBack: "Back to home",
     },
     status: {
       publication: "Publication",
@@ -169,7 +170,7 @@ export const en = {
   companyJobs: {
     title: "Create a new job post",
     description:
-      "Send a POST to `/api/job-posts`: fill in the required fields, add optional details and click \"Create job\".",
+      "Share the essentials of the new role: complete the form and publish it for the right candidates.",
     form: {
       companyId: "Company ID",
       title: "Title",
@@ -205,7 +206,7 @@ export const en = {
       errorMessage: "Could not create the job.",
     },
     validation: {
-      companyId: "Please provide the company ID.",
+      companyId: "We couldn’t detect your company. Please sign in with a company profile and try again.",
       title: "Please enter a job title.",
       description: "Please add a description.",
     },
