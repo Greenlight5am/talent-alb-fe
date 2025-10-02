@@ -5,6 +5,7 @@ import CandidateDashboard from "@/app/features/candidate/pages/Dashboard";
 import CandidateProfileEdit from "@/app/features/candidate/pages/ProfileEdit";
 import CompanyDashboard from "@/app/features/company/pages/Dashboard";
 import CompanyProfileEdit from "@/app/features/company/pages/CompanyProfileEdit";
+import JobPostCreate from "@/app/features/company/pages/JobPostCreate";
 import TalentSearch from "@/app/features/search/pages/TalentSearch";
 import AppLanding from "@/app/features/home/AppLanding";
 import JobBoardPage from "@/features/job-board/JobBoardPage";
@@ -63,10 +64,7 @@ export const router = createBrowserRouter([
             path: "company/users",
             element: <ComingSoon translationKey="router.comingSoon.companyUsers" />,
           },
-          {
-            path: "company/jobs",
-            element: <ComingSoon translationKey="router.comingSoon.companyJobs" />,
-          },
+          { path: "company/jobs", element: <JobPostCreate /> },
 
           // Common (authed only)
           {
