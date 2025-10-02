@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { LanguageSwitcher } from "@/shared/i18n/LanguageSwitcher";
 import { useI18n, useTranslations, type TranslateFn } from "@/shared/i18n/I18nProvider";
 import { localeConfig } from "@/shared/i18n/localeConfig";
-import { JobApplication, useJobApplicationsStorage } from "@/features/job-board/useJobApplicationsStorage";
+import { useJobApplicationsStorage, type JobApplication } from "@/features/job-board/useJobApplicationsStorage";
 
 type JobPostDto = {
   id: string;
@@ -59,6 +59,12 @@ type ApplicationFormState = {
   phone: string;
   resumeUrl: string;
   message: string;
+};
+
+type ApplicationDialogProps = {
+  job: JobPostDto | null;
+  onClose: () => void;
+  onSubmit: (form: ApplicationFormState) => void;
 };
 
 const PAGE_SIZE = 6;
@@ -240,9 +246,6 @@ export default function JobBoardPage() {
             <nav className="order-1 flex flex-wrap items-center justify-end gap-2 text-sm text-slate-600 sm:order-none">
               <a href="#jobs" className={`${ghostButtonClasses} px-3 py-2`}>
                 {t("jobBoard.nav.offers")}
-              </a>
-              <a href="#candidature" className={`${ghostButtonClasses} px-3 py-2`}>
-                {t("jobBoard.nav.applications")}
               </a>
               <Link to="/auth/signup" className={`${secondaryButtonClasses} px-3 py-2`}>
                 {t("common.actions.createProfile")}
