@@ -295,7 +295,7 @@ export default function JobBoardPage() {
           </div>
         )}
 
-        <section id="jobs" className="grid gap-10 lg:grid-cols-[7fr_3fr]">
+        <section id="jobs" className="mx-auto max-w-4xl space-y-6">
           <div className="space-y-6">
             <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:z-10">
               <form onSubmit={handleSubmitFilters} className="flex gap-3 items-end">
@@ -486,7 +486,8 @@ export default function JobBoardPage() {
                 </div>
               )}
             </div>
-          </div>        </section>
+          </div>
+        </section>
       </main>
 
       <ApplicationDialog
