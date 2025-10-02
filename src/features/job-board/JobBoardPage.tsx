@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { LanguageSwitcher } from "@/shared/i18n/LanguageSwitcher";
 import { useI18n, useTranslations, type TranslateFn } from "@/shared/i18n/I18nProvider";
 import { localeConfig } from "@/shared/i18n/localeConfig";
+import { JobApplication, useJobApplicationsStorage } from "@/features/job-board/useJobApplicationsStorage";
 
 type JobPostDto = {
   id: string;
@@ -50,18 +51,6 @@ type FiltersState = {
   country: string;
 };
 
-type JobApplication = {
-  id: string;
-  jobId: string;
-  jobTitle: string;
-  candidateName: string;
-  email: string;
-  phone?: string;
-  resumeUrl?: string;
-  message?: string;
-  createdAt: string;
-};
-
 type FeedbackMessage = { kind: "success" | "error"; message: string } | null;
 
 type ApplicationFormState = {
@@ -74,7 +63,6 @@ type ApplicationFormState = {
 
 const PAGE_SIZE = 6;
 const DEFAULT_FILTERS: FiltersState = { q: "", city: "", country: "" };
-const APPLICATIONS_STORAGE_KEY = "talentalb:applications";
 type SortOption = "relevance" | "newest" | "salaryHigh" | "salaryLow";
 
 const baseButtonClasses =
@@ -101,10 +89,7 @@ export default function JobBoardPage() {
   const [employmentType, setEmploymentType] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortOption>("relevance");
 
-  const [applications, setApplications] = usePersistentState<JobApplication[]>(
-    APPLICATIONS_STORAGE_KEY,
-    []
-  );
+  const [, setApplications] = useJobApplicationsStorage();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -196,7 +181,7 @@ export default function JobBoardPage() {
       parts.push(t("jobBoard.filters.summaryCity", { value: activeFilters.city.trim() }));
     if (activeFilters.country.trim())
       parts.push(t("jobBoard.filters.summaryCountry", { value: activeFilters.country.trim() }));
-    return parts.join(" · ");
+    return parts.join(" - ");
   }, [activeFilters, t]);
 
   const handleSubmitFilters = (event: FormEvent<HTMLFormElement>) => {
@@ -498,10 +483,7 @@ export default function JobBoardPage() {
                 </div>
               )}
             </div>
-          </div>
-
-          <ApplicationsPanel applications={applications} />
-        </section>
+          </div>        </section>
       </main>
 
       <ApplicationDialog
@@ -592,80 +574,11 @@ function JobCard({ job, onApply }: JobCardProps) {
           >
             {t("common.actions.applyNow")}
           </button>
-          <a href="#candidature" className={`${secondaryButtonClasses} px-4 py-2 text-sm`}>
-            {t("common.actions.saveForLater")}
-          </a>
         </div>
       </div>
     </article>
   );
 }
-
-type ApplicationsPanelProps = {
-  applications: JobApplication[];
-};
-
-function ApplicationsPanel({ applications }: ApplicationsPanelProps) {
-  const t = useTranslations();
-  const { locale } = useI18n();
-  const formats = localeConfig[locale];
-  return (
-    <aside
-      id="candidature"
-      className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:sticky lg:top-28"
-    >
-      <div className="space-y-2">
-        <h2 className="text-xl font-semibold text-slate-900">{t("jobBoard.applications.title")}</h2>
-        <p className="text-base text-slate-600">{t("jobBoard.applications.description")}</p>
-      </div>
-
-      {applications.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-base text-slate-600">
-          {t("jobBoard.applications.empty", { cta: t("common.actions.applyNow") })}
-        </div>
-      ) : (
-        <ul className="space-y-3">
-          {applications.map((app) => (
-            <li key={app.id} className="rounded-xl border border-slate-200 p-4">
-              <div className="text-base font-semibold text-slate-900">{app.jobTitle}</div>
-              <div className="mt-1 text-sm uppercase tracking-wide text-slate-500">
-                {t("jobBoard.applications.submittedAt", {
-                  date: formatDate(app.createdAt, formats.date),
-                })}
-              </div>
-              <div className="mt-3 space-y-1 text-base text-slate-600">
-                <p>
-                  <span className="font-medium text-slate-900">{app.candidateName}</span>
-                  {app.email && <span className="text-slate-500"> · {app.email}</span>}
-                </p>
-                {app.phone && (
-                  <p>
-                    {t("jobBoard.applications.phoneLabel")}: {app.phone}
-                  </p>
-                )}
-                {app.resumeUrl && (
-                  <p>
-                    {t("jobBoard.applications.resumeLabel")}:{' '}
-                    <a href={app.resumeUrl} className="text-slate-900 underline" target="_blank" rel="noreferrer">
-                      {app.resumeUrl}
-                    </a>
-                  </p>
-                )}
-                {app.message && <p className="text-slate-500">“{app.message}”</p>}
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-    </aside>
-  );
-}
-
-type ApplicationDialogProps = {
-  job: JobPostDto | null;
-  onClose: () => void;
-  onSubmit: (form: ApplicationFormState) => void;
-};
 
 function ApplicationDialog({ job, onClose, onSubmit }: ApplicationDialogProps) {
   const t = useTranslations();
@@ -723,7 +636,7 @@ function ApplicationDialog({ job, onClose, onSubmit }: ApplicationDialogProps) {
           className={`${secondaryButtonClasses} absolute right-5 top-5 h-9 w-9 rounded-full p-0 text-base`}
           aria-label={t("jobBoard.dialog.close")}
         >
-          ✕
+          x
         </button>
         <div className="pr-8">
           <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{t("jobBoard.dialog.title")}</p>
@@ -855,7 +768,7 @@ function EmptyState({ onClearFilters }: EmptyStateProps) {
   const t = useTranslations();
   return (
     <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-10 text-center text-slate-600 shadow-sm">
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-xl">🔍</div>
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-xl">ðŸ"</div>
       <h3 className="mt-5 text-lg font-semibold text-slate-900">{t("jobBoard.emptyState.title")}</h3>
       <p className="mt-2 text-sm">{t("jobBoard.emptyState.description")}</p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -923,7 +836,7 @@ function Input(props: InputProps) {
           aria-label="Clear input"
           className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
         >
-          ✕
+          x
         </button>
       )}
     </div>
@@ -951,14 +864,14 @@ function beautifyEnum(value: string) {
 
 function truncate(value: string, maxLength: number) {
   if (value.length <= maxLength) return value;
-  return `${value.slice(0, maxLength - 1)}…`;
+  return `${value.slice(0, maxLength - 1)}...`;
 }
 
 function extractRequirements(value?: string | null) {
   if (!value) return [];
   return value
-    .split(/\r?\n|•|-|;/)
-    .map((part) => part.replace(/^[-•\s]+/, "").trim())
+    .split(/\r?\n|\u2022|-|;/)
+    .map((part) => part.replace(/^[-\u2022\s]+/, "").trim())
     .filter(Boolean);
 }
 
@@ -1030,18 +943,6 @@ function formatRelativeTime(
   return formatter.format(diffMinutes, "minute");
 }
 
-function formatDate(isoDate: string, locale: string) {
-  const date = new Date(isoDate);
-  if (Number.isNaN(date.getTime())) return "";
-  return new Intl.DateTimeFormat(locale, {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
-}
-
 function generateId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
@@ -1049,30 +950,7 @@ function generateId() {
   return Math.random().toString(36).slice(2, 11);
 }
 
-function usePersistentState<T>(key: string, defaultValue: T) {
-  const [state, setState] = useState<T>(() => {
-    if (typeof window === "undefined") return defaultValue;
-    try {
-      const stored = window.localStorage.getItem(key);
-      if (!stored) return defaultValue;
-      return JSON.parse(stored) as T;
-    } catch (err) {
-      console.warn("Unable to read from storage", err);
-      return defaultValue;
-    }
-  });
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      window.localStorage.setItem(key, JSON.stringify(state));
-    } catch (err) {
-      console.warn("Unable to write to storage", err);
-    }
-  }, [key, state]);
-
-  return [state, setState] as const;
-}
 
 type DropdownOption = {
   value: string;
@@ -1204,3 +1082,17 @@ function parseLocation(input: string): { city: string; country: string } {
   const country = /^[A-Za-z]{2}$/.test(countryToken) ? countryToken.toUpperCase() : countryToken;
   return { city, country };
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
