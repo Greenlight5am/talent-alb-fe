@@ -21,6 +21,7 @@ export const sq = {
       receiveUpdates: "Merr njoftime",
       clearFilters: "Hiq filtrat",
       logout: "Dil",
+      goBack: "Kthehu në faqen kryesore",
     },
     status: {
       publication: "Publikim",
@@ -248,6 +249,28 @@ export const sq = {
       passwordLabel: "Fjalëkalimi",
       passwordShow: "Shfaq",
       passwordHide: "Fshih",
+      footer: {
+        haveAccount: "Ke tashmë një llogari?",
+        loginLink: "Hyr",
+      },
+    },
+    login: {
+      badge: "Auth · Sign in",
+      title: "Hyr në llogarinë tënde",
+      description: "Shkruaj kredencialet për të vazhduar.",
+      processing: "Po identifikohemi…",
+      fields: {
+        email: "Email",
+        password: "Fjalëkalimi",
+      },
+      submit: "Hyr",
+      successTitle: "Identifikimi u krye",
+      successBody: "Mirë se u ktheve! Po të ridrejtojmë…",
+      errorTitle: "Gabim",
+      footer: {
+        noAccount: "Nuk ke ende një llogari?",
+        signupLink: "Krijo një",
+      },
     },
   },
   router: {

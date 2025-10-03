@@ -4,7 +4,7 @@ import { getSessionAccount } from "@/app/features/auth/useSession";
 
 export function ProtectedRoute({ children }: { children?: React.ReactNode }) {
   const acc = getSessionAccount();
-  if (!acc) return <Navigate to="/auth/signup" replace />;
+  if (!acc) return <Navigate to="/auth/login" replace />;
   return <>{children ?? <Outlet />}</>;
 }
 

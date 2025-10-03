@@ -247,6 +247,28 @@ export const it = {
       passwordLabel: "Password",
       passwordShow: "Show",
       passwordHide: "Hide",
+      footer: {
+        haveAccount: "Hai già un account?",
+        loginLink: "Accedi",
+      },
+    },
+    login: {
+      badge: "Auth · Sign in",
+      title: "Accedi al tuo account",
+      description: "Inserisci le credenziali per continuare.",
+      processing: "Accesso in corso…",
+      fields: {
+        email: "Email",
+        password: "Password",
+      },
+      submit: "Accedi",
+      successTitle: "Accesso riuscito",
+      successBody: "Bentornato! Ti reindirizzo…",
+      errorTitle: "Errore",
+      footer: {
+        noAccount: "Non hai un account?",
+        signupLink: "Crea un account",
+      },
     },
   },
   router: {
