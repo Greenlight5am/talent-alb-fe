@@ -42,19 +42,21 @@ export default function AppShell() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6 lg:flex-row lg:py-12">
         <aside className="lg:w-72">
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:sticky lg:top-10 lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto">
-            <div className="space-y-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">
-                {t("common.appName")}
-              </span>
-              <p className="break-all text-base font-semibold text-slate-900">
-                {acc?.email ?? t("appShell.session.guest")}
-              </p>
+            <div className="flex items-start gap-4">
+              <div className="space-y-2">
+                <span className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">
+                  {t("common.appName")}
+                </span>
+                <p className="break-all text-base font-semibold text-slate-900">
+                  {acc?.email ?? t("appShell.session.guest")}
+                </p>
+              </div>
+              <LanguageSwitcher
+                hideLabel
+                className="ml-auto shrink-0"
+                selectClassName="bg-slate-50 hover:bg-white"
+              />
             </div>
-            <LanguageSwitcher
-              hideLabel
-              className="mt-6 ml-auto"
-              selectClassName="bg-slate-50 hover:bg-white"
-            />
             <nav className="mt-6 space-y-6 text-sm">
               {sections.map((section) => (
                 <NavSection key={section.title} title={section.title} items={section.items} />
@@ -77,6 +79,14 @@ export default function AppShell() {
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
             {isGuest && (
               <div className="mb-6 flex flex-wrap justify-end gap-3">
+                <button
+                  onClick={() => {
+                    window.location.href = "/auth/login";
+                  }}
+                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-700 shadow-sm transition-transform duration-150 hover:-translate-y-0.5 hover:bg-slate-50"
+                >
+                  {t("common.actions.signIn")}
+                </button>
                 <button
                   onClick={() => {
                     window.location.href = "/auth/signup";

@@ -248,6 +248,28 @@ export const en = {
       passwordLabel: "Password",
       passwordShow: "Show",
       passwordHide: "Hide",
+      footer: {
+        haveAccount: "Already have an account?",
+        loginLink: "Sign in",
+      },
+    },
+    login: {
+      badge: "Auth · Sign in",
+      title: "Sign in to your account",
+      description: "Enter your credentials to continue.",
+      processing: "Signing you in…",
+      fields: {
+        email: "Email",
+        password: "Password",
+      },
+      submit: "Sign in",
+      successTitle: "Signed in",
+      successBody: "Welcome back! Redirecting you…",
+      errorTitle: "Error",
+      footer: {
+        noAccount: "Don’t have an account?",
+        signupLink: "Create one",
+      },
     },
   },
   router: {

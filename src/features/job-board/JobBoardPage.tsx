@@ -199,6 +199,10 @@ export default function JobBoardPage() {
   const handleResetFilters = () => {
     setFormState(DEFAULT_FILTERS);
     setActiveFilters(DEFAULT_FILTERS);
+    setWorkMode(null);
+    setSeniority(null);
+    setEmploymentType(null);
+    setSortBy("relevance");
     setPage(0);
   };
 
@@ -250,7 +254,7 @@ export default function JobBoardPage() {
               <Link to="/auth/signup" className={`${secondaryButtonClasses} px-3 py-2`}>
                 {t("common.actions.createProfile")}
               </Link>
-              <Link to="/app" className={`${primaryButtonClasses} px-3 py-2`}>
+              <Link to="/auth/login" className={`${primaryButtonClasses} px-3 py-2`}>
                 {t("common.actions.signIn")}
               </Link>
             </nav>

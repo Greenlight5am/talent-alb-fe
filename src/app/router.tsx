@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Signup from "@/app/features/auth/Signup";
+import Login from "@/app/features/auth/Login";
 import AppShell from "@/app/layouts/AppShell";
 import CandidateDashboard from "@/app/features/candidate/pages/Dashboard";
 import CandidateProfileEdit from "@/app/features/candidate/pages/ProfileEdit";
@@ -16,6 +17,7 @@ import type { TranslationKey } from "@/shared/i18n/messages";
 export const router = createBrowserRouter([
   { path: "/", element: <JobBoardPage /> },
   { path: "/auth/signup", element: <Signup /> },
+  { path: "/auth/login", element: <Login /> },
   {
     path: "/app",
     element: <AppShell />,
